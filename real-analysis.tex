@@ -1,0 +1,1030 @@
+\documentclass{ctexart}
+
+\usepackage{enumitem}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\theoremstyle{definition}
+\newtheorem{definition}{定义}
+\newtheorem{lemma}{引理}
+\newtheorem{theorem}{定理}
+\newtheorem{example}{例}
+\newtheorem{corollary}{推论}
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+
+\title{实分析}
+\author{}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{测度论}
+	为了建立积分的严格理论,我们需要首先考察所谓的``长度''.将其推广到欧式空间上的一般集合，就是所谓的``测度''.
+	
+	\subsection{预备知识}
+	
+	矩体是最简单的图形了,矩体的``长度''可以很直观地得到.因此,矩体将成为我们定义测度的基础.
+	\begin{definition}
+		对$a_i,b_i\in\mathbb{R},a_i\le b_i$,集合$R=[a_1,b_1]\times\cdots[a_n,b_n]$称为$\mathbb{R}^n$中的\textbf{(闭)矩体},$|R|=(b_1-a_1)\cdots(b_n-a_n)$称为$R$的\textbf{体积}.
+		
+		如果$b_i-a_i$相同,则称这样的矩体为\textbf{方体}.
+		
+		将$[a_i,b_i]$改为$(a_i,b_i)$,得到的集合就叫做开矩体和开方体.
+	\end{definition}
+	\begin{definition}
+		对于两个闭矩体$R_1,R_2$,如果他们的内部(即对应的开矩体)不交,则称$R_1$和$R_2$\textbf{几乎不交}.
+	\end{definition}
+	
+	关于矩体的并的体积的性质，我们有如下引理：
+	\begin{lemma}
+		设$R_k(1\le k\le N),R$为矩体,那么有:
+		\begin{enumerate}
+			\item 若$R=\bigcup_{k=1}^N R_k$,且$R_k$互相不交,则$|R|=\sum_{k=1}^N{|R_k|}$.
+			\item 若$R\subset\bigcup_{k=1}^N R_k$,则$|R|\le\sum_{k=1}^N{|R_k|}$.
+		\end{enumerate}
+	\end{lemma}
+	
+	\hspace*{\fill}
+	
+	Cantor集是在实分析中常常出现的一个特殊集合,它常常用于各种反例的构造.
+	\begin{example}
+		从区间$[0,1]$出发,首先挖去中间$\frac{1}{3}$的开区间,得到
+		$$\mathcal{C}_1=[0,\frac{1}{3}]\cup[\frac{2}{3},1].$$
+		
+		然后再在$\mathcal{C}_1$的两个闭区间中挖去$\frac{1}{3}$的开区间,得到
+		$$\mathcal{C}_2=[0,\frac{1}{9}]\cup[\frac{2}{9},\frac{1}{3}]\cup[\frac{2}{3},\frac{7}{9}]\cup[\frac{8}{9},1].$$
+		
+		......如此继续下去,得到$\mathcal{C}_k$,这是一个递减集合列.
+		我们定义
+		$$\mathcal{C}=\bigcap_{k=1}^\infty{\mathcal{C}_k}$$
+		为Cantor集.
+		
+		Cantor集具有的性质包括:有界闭集、完全不联通、无孤立点(完全集)、不可数(与$[0,1]$等势).
+	\end{example}
+	
+	\subsection{外测度}
+	外测度,是从集合的外侧逼近集合得到的测度.外测度的性质并不好,但它可以定义在任意集合上,是测度的基础.
+	
+	\begin{definition}[外测度]
+		设$E\subset\mathbb{R}^n$,则其外测度定义为
+		$$m_*(E)=\inf_{E\,\subset\,\bigcup_{j=1}^\infty{Q_j}\;}{\sum_{j=1}^\infty{|Q_j|}},$$
+		其中$Q_j$是$R^n$中的方体.
+	\end{definition}
+	\begin{example}
+		一些简单集合的外测度:
+		\begin{enumerate}
+			\item 单点集的外测度为0.
+			\item 闭方体的外测度等于其体积.
+			\item 开方体的外测度等于其体积.
+			\item 矩体的外测度等于其体积.
+			\item Cantor集的外测度为0.
+		\end{enumerate}
+	\end{example}
+	
+	\begin{theorem}
+		关于外测度,我们有如下性质:
+		\begin{enumerate}
+			\item (单调性)若$E_1\subset E_2$,则$m_*(E_1)\le m_*(E_2)$.
+			\item (可数次可加性)若$E\subset\bigcup_{j=1}^\infty{E_j}$,则$m_*(E)\le\sum_{j=1}^\infty{m_*(E_j)}$.
+			\item $m_*(E)=\inf_{O\supset E}{m_*(O)}$,其中$O$是开集.
+			\item (距离外测度性质)若$E=E_1\cup E_2$,且$d(E_1,E_2)>0$,则$m_*(E)=m_*(E_1)+m_*(E_2)$.
+			\item 若$E=\bigcup_{j=1}^\infty{Q_j}$,且方体$Q_j$几乎不交,那么$m_*(E)=\sum_{j=1}^\infty{|Q_j|}$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		1是显然的.4,5的证明略.
+		
+		2的证明:根据外测度定义,对任意的$\varepsilon>0$,我们可以取$E_j\subset\bigcup_{k=1}^\infty{Q_{kj}}$,使得
+		$$\sum_{k=1}^\infty{|Q_{kj}|}\le m_*(E_j)+\frac{\varepsilon}{2^j}.$$
+		
+		这时,我们就有
+		$$m_*(E)\le\sum_{k,j}{|Q_{kj}|}\le\sum_{j=1}^\infty{m_*(E_j)}+\varepsilon,$$
+		由$\varepsilon$的任意性即得.
+		
+		3的证明:只需证明$\inf_{O\supset E}{m_*(O)}\le m_*(E)$.
+		对任意$\varepsilon>0$,有$E\subset\bigcup_{j=1}^\infty{Q_j}$且有
+		$$\sum_{j=1}^\infty{|Q_j|}\le m_*(E)+\varepsilon$$
+		
+		将每个$Q_j$适当放大为包含它的开方体$O_j$,使得$|O_j|<|Q_j|+\frac{1}{2^j}$.再令开集$O=\bigcup_{j=1}^\infty{O_j}$,此时就有
+		$$ m_*(O) \le \sum_{j=1}^\infty{|O_j|}
+			\le \sum_{j=1}^\infty{|Q_j|}+\varepsilon
+			\le m_*(E)+2\varepsilon.$$
+		
+		由$\varepsilon$的任意性即得.
+	\end{proof}
+	
+	\subsection{测度}
+	测度是``长度''的推广.对于测度,我们希望它像外测度一样能够反映长度的性质;但又希望它具有一些比较好的性质(比如可数可加性).我们的做法是,将外测度限制在一些``性质比较好''的集合上,得到测度.
+	
+	\begin{definition}
+	设$E\subset\mathbb{R}^n$.如果对任意的$\varepsilon>0$,总存在开集$O\supset E$,使得$m_*(O-E)<\varepsilon$,则称$E$为(Lebesgue)可测集,$E$的测度$m(E)=m_*(E)$.
+	\end{definition}
+	\begin{theorem}
+		关于可测性,我们有如下性质:
+		\begin{enumerate}
+			\item 开集可测.
+			\item 若$m_*(E)=0$,则$E$可测.特别地,零测集的子集可测.
+			\item 可测集的可数并可测.
+			\item 可测集的补可测.
+			\item 可测集的可数交可测.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{theorem}[测度的可数可加性]
+		设$E_j$可测且两两不交,$E=\bigcup_{j=1}^\infty{E_j}$,则
+		$$m(E)=\sum_{j=1}^\infty{m(E_j)}.$$
+	\end{theorem}
+	\begin{proof}
+		不妨设$E_j$有界(否则考虑将$E_j$划分为可数个有界可测集之并).此时$E_j^c$可测,从而存在闭集$F_j\subset E_j$使得$m_*(F_j-E_j)<\frac{\varepsilon}{2^j}$.
+		
+		此时$F_j$紧,且两两不交,根据距离外测度性质,对任意的$N$,有
+		$$m\left(\bigcup_{j=1}^N{F_j}\right)=\sum_{j=1}^N{m(F_j)},$$
+		从而有
+		$$m(E)\ge m\left(\bigcup_{j=1}^N{F_j}\right)
+			\ge\sum_{j=1}^N{m(E_j)}-\varepsilon.$$
+		
+		先令$N\to\infty$,再利用$\varepsilon$的任意性即得$m(E)\ge\sum_{k=1}^\infty{m(E_j)}$,得证.
+	\end{proof}
+	
+	\begin{theorem}[测度的单调性]
+		设$E_k$可测:
+		\begin{enumerate}
+			\item 若$E_k\nearrow E$,则$m(E)=\lim_{k\to\infty}{m(E_k)}$.
+			\item 若$E_k\searrow E$且$m(E_1)<+\infty$,则$m(E)=\lim_{k\to\infty}{m(E_k)}$.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{theorem}\label{thm_cube_union}
+		关于可测集的逼近,我们有如下结论:
+		
+		设$E$是可测集,对任意的$\varepsilon>0$,有
+		\begin{enumerate}
+			\item 存在开集$O\supset E$,使得$m(O-E)<\varepsilon$;
+			\item 存在闭集$F\subset E$,使得$m(E-F)<\varepsilon$;
+			\item 若$m(E)<+\infty$,存在紧集$K\subset E$,使得$m(E-K)<\varepsilon$;
+			\item \label{item_cube_union} 若$m(E)<+\infty$,存在若干闭方体$Q_j$的并$F=\bigcup_{j=1}^N{Q_j}$,使得$m(E\triangle F)<\varepsilon$.
+		\end{enumerate}
+		
+		设$E$是可测集,则有
+		\begin{enumerate}[start=5]
+			\item 存在$G_\delta$集(即可数个开集的交)$G\subset E$,使得$m(G-E)=0$;
+			\item 存在$F_\delta$集(即可数个闭集的并)$F\subset E$,使得$m(E-F)=0$.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{theorem}
+		设$E$可测,那么:
+		\begin{enumerate}
+			\item 对$h\in\mathbb{R}^n$,有$m(E+h)=m(E)$.
+			\item 对$\delta\in\mathbb{R}$,有$m(\delta E)=|\delta|^nm(E)$.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{example}[不可测集]
+		在$[0,1]$上定义关系$x\sim y\Leftrightarrow x-y\in\mathbb{Q}$,容易验证$\sim$是等价关系,从而把$[0,1]$划分为若干等价类.每个等价类选取一个代表元$x_\alpha$,并令$\mathcal{N}={x_\alpha}$,那么$\mathcal{N}$是不可测集.
+		
+		否则,设$r_k$是$[-1,1]$内全体有理数,定义$\mathcal{N}_k=\mathcal{N}+r_k$,那么有
+		$$[0,1]\subset\bigcup_{k=1}^\infty{\mathcal{N}_k}\subset[-1,2].$$
+		由于$\mathcal{N}_k$互不相交,$m(\mathcal{N}_k)=m(\mathcal{N})$,所以有
+		$$1\le\sum_{k=1}^\infty{m(\mathcal{N})}\le3,$$
+		矛盾.
+	\end{example}
+	
+	\begin{lemma}[Borel-Cantelli引理]
+		若$E_k$可测,且$\sum_{k=1}^\infty{m(E_k)}<+\infty$.令
+		$$E=\limsup_{k\to\infty}{E_k}=\{x\mid x\mbox{在无穷多的}E_k\mbox{中出现}\},$$
+		那么$m(E)=0$.
+	\end{lemma}
+	
+	\subsection{可测函数}
+	可测函数的地位和Riemann可积函数类似,是定义积分的前提.
+	
+	\begin{definition}[几种特殊的函数]
+		\hspace*{\fill}
+		
+		\begin{enumerate}
+			\item 设$E$为集合,定义
+			\begin{equation*}
+				\chi_E(x)=
+				\begin{cases}
+					1, & x\in E \\
+					0, & x\notin E \\
+				\end{cases}
+			\end{equation*}
+			那么$\chi_E$称为$E$的\textbf{特征函数}.
+			\item 若$R_k$为矩体,$a_k\in\mathbb{R}$,则$f(x)=\sum_{k=1}^N{a_k\chi_{R_k}}$称为\textbf{阶梯函数}.
+			\item 若$E_k$可测且测度有限,$a_k\in\mathbb{R}$,则$f(x)=\sum_{k=1}^N{a_k\chi_{E_k}}$称为\textbf{简单函数}.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{remark}
+		通过允许$f(x)=\pm\infty$,得到扩展实值函数.此时的运算满足$\infty+\infty=\infty$等合理的结果(但$\infty-\infty$这类并无定义).下面的讨论中,很多结论对于扩展实值函数也成立,但不会特意指出.
+	\end{remark}
+	
+	\begin{definition}
+		设$E$为可测集,定义在$E$上的函数$f$满足对任意$a\in\mathbb{R}$,集合$\{x\in E\mid f(x)<a\}$可测,则称$f$为$E$上的\textbf{可测函数}.
+	\end{definition}
+	\begin{definition}
+		对于关于$x$的命题$P(x)$,如果集合$\{x\mid P(x)\mbox{不成立}\}$是零测集,则称$P(x)$几乎处处(a.e.)成立.
+		
+		如果$E$是集合,$\{x\in E\mid P(x)\mbox{不成立}\}$是零测集,则称$P(x)$在$E$上几乎处处(a.e.)成立.
+	\end{definition}
+	\begin{theorem}
+		对于可测函数,有如下性质:
+		\begin{enumerate}
+			\item 设$\{f_n\}$为可测函数列,则$\sup_{n\ge 1}{f_n}$,$\inf_{n\ge 1}{f_n}$,$\limsup_{n\to\infty}{f_n}$,$\liminf_{n\to\infty}{f_n}$均为可测函数.
+			
+			特别地,若$\lim_{n\to\infty}{f_n(x)}=f(x)$,则$f$为可测函数.
+			\item 若$f$可测,$k$为正整数,则$f^k$可测;若$f$,$g$可测,则$f+g$,$fg$可测.
+			\item 若$f$可测,$f=g$\ a.e.,则$g$可测.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{theorem}\label{thm_step_approx}
+		关于可测函数的逼近,有如下结论:
+		\begin{enumerate}
+			\item 设$f$在$\mathbb{R}^n$上非负可测,则存在非负、单调递增的简单函数列$\{\varphi_k\}$,使得对任意$x\in\mathbb{R}^n$,$\lim_{k\to\infty}{\varphi_k(x)}=f(x)$.
+			\item 设$f$在$\mathbb{R}^n$上可测,则存在简单函数列$\{\varphi_k\}$,满足$|\phi_k(x)|\le|\phi_{k+1}(x)|$,且$\lim_{k\to\infty}{\varphi_k(x)}=f(x)$.
+			\item\label{item_step_approx} 设$f$在$\mathbb{R}^n$上可测,则存在阶梯函数列$\{\psi_k\}$使得$\lim_{k\to\infty}{\psi_k(x)}=f(x)$.
+		\end{enumerate}
+	\end{theorem}
+	
+	\hspace*{\fill}
+	
+	关于可测集、可测函数的逼近关系,我们可以总结出三条Littlewood三原理:
+	
+	\begin{enumerate}
+		\item 可测集大约等于有限个方体的并;
+		\item 可测函数大约是连续函数;
+		\item 收敛的可测函数列大约是一致收敛的.
+	\end{enumerate}
+	
+	第1条正是前面的\textbf{定理\ref{thm_cube_union}}(\ref{item_cube_union});而第2、3条则是后面的Lusin定理和Egorov定理.
+	
+	\begin{theorem}[Egorov定理]
+		设$f_k$是可测集$E$上的可测函数列,$m(E)<+\infty$,且$f_k\to f(k\to\infty)$在$E$上a.e.成立.
+		
+		那么,对任意的$\varepsilon>0$,存在闭集$A_\varepsilon\subset E$,使得$m(E-A_\varepsilon)<\varepsilon$,且$f_k\to f(k\to\infty)$在$A_\varepsilon$上一致.
+	\end{theorem}
+	\begin{remark}
+		这里$m(E)<+\infty$和$\varepsilon>0$都是必要的.
+	\end{remark}
+	\begin{proof}
+		不妨设$f_k\to f$在$E$上处处成立.令
+		$$E_k^n=\left\{x\in E\ \middle|\ \forall j>k,|f_j(x)-f(x)|<\frac{1}{n}\right\},$$
+		易知此时$E_k^n\subset E_{k+1}^n$,且$E_k^n\nearrow E(k\to\infty)$.
+		
+		因此,存在$k_n$使得$m(E-E_{k_n}^n)<\frac{1}{2^n}$.
+		再取$N$使得$\sum_{n=N}^\infty{\frac{1}{2^n}}<\frac{\varepsilon}{2}$,
+		并令$\widetilde{A}_\varepsilon=\bigcap_{n=N}^\infty{E_{k_n}^n}$.
+		此时就有
+		$$m(E-\widetilde{A}_\varepsilon)\le\sum_{n=N}^\infty{m(E-E_{k_n}^n)}<\frac{\varepsilon}{2}.$$
+		
+		由$E_k^n$的定义可知,对任意的$n$,当$j>k_n$时$|f_j(x)-f(x)|\le\frac{1}{n}$在$\widetilde{A}_\varepsilon$上处处成立,从而根据定义$f_k\to f$在$\widetilde{A}_\varepsilon$上一致.
+		
+		最后,取闭集$A_\varepsilon\subset\widetilde{A}_\varepsilon$使得$m(\widetilde{A}_\epsilon-A_\varepsilon)<\frac{\varepsilon}{2}$即得.
+	\end{proof}
+	
+	\begin{theorem}[Lusin定理]
+		设$f$是可测集$E$上可测函数,$m(E)<+\infty$.那么对任意的$\varepsilon>0$,存在闭集$F_\varepsilon\subset E$,使得$m(E-F_\varepsilon)<\varepsilon$,且$f|_{F_\varepsilon}$是连续函数.
+	\end{theorem}
+	\begin{remark}
+		这里$\varepsilon>0$是必要的,但$m(E)<+\infty$并不是必要的.
+	\end{remark}
+	\begin{proof}
+		一方面,根据\textbf{定理\ref{thm_step_approx}}(\ref{item_step_approx}),存在阶梯函数列$f_n\to f$\ a.e.
+		
+		对任意的$n$,利用阶梯函数的性质,我们可以找到$E_n\subset E$,使得$m(E_n)<\frac{1}{2^n}$,并且$f_n$在$E-E_n$上连续.
+		
+		另一方面,根据Egorov定理,存在闭集$A_\varepsilon\subset E$,使得$m(E-A_\varepsilon)<\frac{\varepsilon}{3}$,且$f_n\to f$在$A_\varepsilon$上一致.
+		
+		取$N$使得$\sum_{n=N}^\infty{\frac{1}{2^n}}<\frac{\varepsilon}{3}$,再令$F'=A_\varepsilon-\bigcup_{n=N}^\infty{E_n}$,那么就有$m(E-F')<\frac{2\varepsilon}{3}$,$f_n|_{F'}$连续,且$f_n|_{F'}\to f|_{F'}$一致.
+		
+		利用一致收敛性的性质可知$f|_{F'}$连续.最后取闭集$F_\varepsilon\subset F'$使得$m(F'-F_\varepsilon)<\frac{\varepsilon}{3}$即得.
+	\end{proof}
+	
+	\section{积分论}
+	Lebesgue积分是实分析中最核心的内容.不同于Riemann积分,Lebesgue积分是通过逼近的思想逐步建立起来的.
+	
+	\subsection{Lebesgue积分的建立}
+	本节中,所有函数均默认为可测函数.
+	
+	\subsubsection{简单函数的Lebesgue积分}
+	\begin{definition}
+		设$\varphi=\sum_{k=1}^N{a_k\chi_{E_k}}$为简单函数.如果$a_k$互不相同、非零,且$E_k$互不相交,那么就称这样的表示为$\varphi$的正则表示.
+	\end{definition}
+	\begin{definition}
+		设$\varphi=\sum_{k=1}^M{c_k\chi_{E_k}}$为简单函数的正则表示,则定义其(在$\mathbb{R}^n$上的)Lebesgue积分为
+		$$\int{\varphi(x)\,\mathrm{d}x}=\sum_{k=1}^M{c_km(F_k)}.$$
+		
+		设$E$是$\mathbb{R}^n$的可测子集,则定义$\varphi$在$E$上的积分为
+		$$\int_E{\varphi(x)\,\mathrm{d}x}=\int{\varphi(x)\chi_E(x)\,\mathrm{d}x}.$$
+	\end{definition}
+	\begin{corollary}
+		简单函数的积分有如下性质:
+		\begin{enumerate}
+			\item (积分与表示无关)设$\varphi=\sum_{k=1}^N{a_k\chi_{E_k}}$是任一表示,那么有
+			$$\int{\varphi}=\sum_{k=1}^N{a_km(E_k)}.$$
+			\item (线性性)设$\varphi$和$\psi$是简单函数,$a,b\in\mathbb{R}$,那么有
+			$$\int{(a\varphi+b\psi)}=a\int{\varphi}+b\int{\psi}.$$
+			\item (可加性)设$E,F$是$\mathbb{R}^n$中的不交子集,则
+			$$\int_{E\cup F}{\varphi}=\int_E{\varphi}+\int_F{\varphi}.$$
+			\item (单调性)设$\varphi\le\psi$,且均为简单函数,则
+			$$\int{\varphi}\le\int{\psi}.$$
+		\end{enumerate}
+	\end{corollary}
+	
+	\subsubsection{有限测度集支撑的有界函数的Lebesgue积分}
+	\begin{definition}
+		设$f$是可测函数,则其支撑集定义为$\mathrm{supp}(f)=\{x|f(x)\ne 0\}$.
+		如果$m(\mathrm{supp}(f))<+\infty$,则称$f$是有限测度集支撑的.
+	\end{definition}
+	\begin{lemma}
+		设$f$是有限测度集支撑的有界函数,$\{\varphi_n\}$是一列有界$M$的简单函数列,且满足对a.e.的$x$,$\varphi_n(x)\to f(x)$($n\to\infty$).那么有:
+		\begin{enumerate}
+			\item 极限$\lim_{n\to\infty}{\int{\varphi_n}}$存在.
+			\item 若$f=0$\ a.e.,则极限$\lim_{n\to\infty}{\int{\varphi_n}}=0$.
+		\end{enumerate}
+	\end{lemma}
+	\begin{definition}
+		设$f$是有限测度集支撑的有界函数,取一列有界$M$的简单函数列$\{\varphi_n\}$,则$f$在$\mathbb{R}^n$上的积分定义为
+		$$\int{f(x)\,\mathrm{d}x}=\lim_{n\to\infty}{\int{\varphi_n(x)\,\mathrm{d}x}}.$$
+	\end{definition}
+	\begin{corollary}
+		有限测度集支撑的有界函数的Lebesgue积分满足线性性、可加性、单调性.
+	\end{corollary}
+	
+	\begin{theorem}[有界收敛定理,BCT]
+		设$\{f_n\}$是一列有界$M$的可测函数,被有限测度集$E$支撑,且$f_n(x)\to f(x)$($n\to\infty$)\ a.e.
+		
+		则$f$可测,有界,\ a.e.被$E$支撑,且有
+		$$\int{|f_n-f|}\to 0\ (n\to\infty).$$
+	\end{theorem}
+	\begin{proof}
+		$f$可测,有界,\ a.e.被$E$支撑显然.
+		
+		对任意的$\varepsilon>0$,由Egorov定理,存在集合$A_\varepsilon\subset E$使得$m(E-A_\varepsilon)<\varepsilon$,且$f_n\to f$在$A_\varepsilon$上一致.
+		那么此时对充分大的$n$以及任意的$x\in A_\varepsilon$,就有$|f_n(x)-f(x)|<\varepsilon$,从而有
+		\begin{align*}
+			\int{|f_n(x)-f(x)|\,\mathrm{d}x}
+			& = \int_{A_\varepsilon}{|f_n(x)-f(x)|\,\mathrm{d}x}+\int_{E-A_\varepsilon}{|f_n(x)-f(x)|\,\mathrm{d}x} \\
+			& < \varepsilon m(E)+2Mm(E-\varepsilon) \\
+			& < (2M+m(E))\varepsilon.
+		\end{align*}
+		
+		由$\varepsilon$任意性即得.
+	\end{proof}
+	
+	\subsubsection{非负函数的Lebesgue积分}
+	\begin{definition}
+		设$f$非负,则它在$\mathbb{R}^n$上的积分为
+		$$\int{f(x)\,\mathrm{d}x}=\sup\left\{\int{g(x)\,\mathrm{d}x} \middle| g\mbox{是有限测度集支撑的有界函数},\mbox{且}0\le g\le f\right\}.$$
+	\end{definition}
+	\begin{corollary}
+		非负函数的Lebesgue积分满足线性性、可加性、单调性.
+	\end{corollary}
+	
+	\begin{lemma}[Fatou引理]
+		设$\{f_n\}$是非负函数列,$f_n(x)\to f(x)$\ a.e.
+		
+		那么就有
+		$$\int{f}\le\liminf_{n\to\infty}{\int{f_n}}.$$
+	\end{lemma}
+	\begin{proof}
+		设$0\le g\le f$,且$g$为有限测度集支撑的有界函数.令$g_n(x)=\min\{g(x),f_n(x)\}$,那么由有界收敛定理,
+		$$\int{g_n}\to\int{g}\ (n\to\infty).$$
+		
+		此时又有$g_n\le f_n$,从而$\int{g_n}\le\int{f_n}$,于是有
+		$$\int{g}\le\liminf_{n\to\infty}{\int{f_n}}.$$
+		
+		不等号左侧对$g$取上确界即得.
+	\end{proof}
+	\begin{corollary}[单调收敛定理,MCT]
+		设$\{f_n\}$是非负函数列,$f_n(x)\nearrow f(x)$.那么就有
+		$$\lim_{n\to\infty}{\int{f_n}}=\int{f}.$$
+	\end{corollary}
+	
+	\subsubsection{一般情况的Lebesgue积分}
+	\begin{definition}
+		设$f$是可测函数.定义$f^+(x)=\max\{f(x),0\},f^-(x)=\max\{-f(x),0\}$,则其Lebesgue积分为
+		$$\int{f(x)\,\mathrm{d}x}=\int{f^+(x)\,\mathrm{d}x}-\int{f^-(x)\,\mathrm{d}x}.$$
+		
+		如果$f^+$和$f^-$的积分均有限,则称$f$\textbf{可积}.
+	\end{definition}
+	\begin{corollary}
+		Lebesgue积分满足线性性、可加性、单调性.
+	\end{corollary}
+	\begin{corollary}\label{thm_integral_property}
+		设$f$是可测函数,对任意的$\varepsilon>0$:
+		\begin{enumerate}
+			\item 存在球$B$,使得$$\int_{B^c}{|f|}<\varepsilon.$$
+			\item (积分的绝对连续性)存在$\delta>0$,使得对任意可测集$E$,只要$m(E)<\delta$,就有$$\int_E{|f|}<\varepsilon.$$
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[Lebesgue控制收敛定理,DCT]
+		设$\{f_n\}$是可测函数列,$f_n(x)\to f(x)$\ a.e.,且有可积函数$g$使得$|f_n(x)|\le g(x)$,那么有
+		$$\int{|f_n-f|}\to 0\ (n\to\infty).$$
+	\end{theorem}
+	\begin{proof}
+		设$E_N=\{x\mid |x|\le N,g(x)<N\}$.对任意$\varepsilon>0$,根据\textbf{推论\ref{thm_integral_property}},存在$N$使得$\int_{E_N^c}{g}<\varepsilon$.
+		
+		对$f_n\chi_{E_N}$使用有界收敛定理,可知对充分大的$n$,有
+		$$\int_{E_N}{|f_n-f|}<\varepsilon.$$
+		
+		因此就有
+		\begin{align*}
+			\int{|f_n-f|} & = \int_{E_N}{|f_n-f|}+\int_{E_N^c}{|f_n-f|} \\
+			& \le \int_{E_N}{|f_n-f|}+2\int_{E_N^c}{g} \\
+			& < 3\varepsilon
+		\end{align*}
+		由$\varepsilon$任意性即得.
+	\end{proof}
+	
+	\subsection{Fubini定理}
+	Fubini定理反映了高维空间中的重积分换序问题.
+	
+	\begin{definition}
+		设$E$是$\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}$的子集,$x\in\mathbb{R}^{d_1}$,$y\in\mathbb{R}^{d_2}$,则称其切片
+		$$E_x=\{y\in\mathbb{R}^{d_2}\mid(x,y)\in E\},
+		E^y=\{x\in\mathbb{R}^{d_1}\mid(x,y)\in E\}.$$
+		
+		设$f$是$\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}$上函数,$x\in\mathbb{R}^{d_1}$,$y\in\mathbb{R}^{d_2}$,则称其切片函数
+		$$f_x(y)=f^y(x)=f(x,y).$$
+	\end{definition}
+	\begin{theorem}[Tonelli定理]
+		设$f(x,y)$在$\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}$上非负可测,则有:
+		\begin{enumerate}
+			\item 对于a.e.的$y\in\mathbb{R}^{d_2}$,$f^y$在$\mathbb{R}^{d_2}$上可测;
+			\item $\int_{\mathbb{R}^{d_1}}{f^y}$在$\mathbb{R}^{d_2}$上可测;
+			\item $$\int_{\mathbb{R}^{d_2}}{\left(\int_{\mathbb{R}^{d_1}}{f^y}\right)}=\int_{\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}}{f}.$$
+		\end{enumerate}
+	\end{theorem}
+	\begin{theorem}[Fubini定理]
+		设$f(x,y)$在$\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}$上可积,则有:
+		\begin{enumerate}
+			\item 对于a.e.的$y\in\mathbb{R}^{d_2}$,$f^y$在$\mathbb{R}^{d_2}$上可积;
+			\item $\int_{\mathbb{R}^{d_1}}{f^y}$在$\mathbb{R}^{d_2}$上可积;
+			\item $$\int_{\mathbb{R}^{d_2}}{\left(\int_{\mathbb{R}^{d_1}}{f^y}\right)}=\int_{\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}}{f}.$$
+		\end{enumerate}
+	\end{theorem}
+	\begin{corollary}
+		设$E$是$\mathbb{R}^{d_1}\times\mathbb{R}^{d_2}$的可测子集,则:
+		\begin{enumerate}
+			\item 对a.e.的$y\in\mathbb{R}^{d_2}$,$E^y$是$\mathbb{R}^{d_1}$的可测子集;
+			\item $m(E^y)$是关于$y$的可测函数;
+			\item $$m(E)=\int_{\mathbb{R}^{d_2}}{m(E^y)\,\mathrm{d}y}.$$
+		\end{enumerate}
+	\end{corollary}
+	
+	\subsection{依测度收敛性}
+	
+	\begin{definition}
+		设$\{f_n\}$为$E$上可测函数列,$f$为$E$上可测函数,且对任意的$\varepsilon>0$,
+		$$m\Bigl(\Bigl\{x\in E\Bigm| |f_n(x)-f(x)|>\varepsilon\Bigr\}\Bigr)\to 0\ (n\to\infty),$$
+		则称$f_n$\textbf{依测度收敛}到$f$,记作$f_n\xrightarrow{m} f$.
+	\end{definition}
+	\begin{corollary}[依测度收敛的唯一性]
+		若$f_k\xrightarrow{m}f$,$f_k\xrightarrow{m}g$,那么$f=g$\ a.e.
+	\end{corollary}
+	
+	\begin{theorem}
+		设$f_k$和$f$在$E$上可测,$m(E)<+\infty$,且$f_k\to f\ (k\to\infty)$\ a.e.,则$f_k\xrightarrow{m}f$.
+	\end{theorem}
+	\begin{proof}
+		对任意的$\varepsilon>0$,令
+		$$E_k=\Bigl\{x\in E\Bigm| |f_n(x)-f(x)|>\varepsilon\Bigr\}.$$
+		
+		由于$\limsup_{k\to\infty}{E_k}=\{x\mid\mbox{存在无限多个}k,\mbox{使得}|f_k(x)-f(x)|>\varepsilon\}$不可能包含任何收敛点,所以
+		$$m\left(\limsup_{k\to\infty}{E_k}\right)=\lim_{k\to\infty}{m\left(\bigcup_{j\ge k}{E_j}\right)}=0.$$
+		
+		因此由$m(E_k)\le m(\bigcup_{j\ge k}{E_j})$即知$m(E_k)\to 0$,也即$f_k\xrightarrow{m}f$.
+	\end{proof}
+	\begin{theorem}\label{thm_near_uniform}
+		设$f_k$和$f$在$E$上可测,且对任意$\delta>0$,存在可测集$A_\delta\subset E$使得$m(E-A_\delta)<\delta$,且$f_k\to f$在$A_\delta$上一致(近一致收敛).那么$f_k\xrightarrow{m}f$.
+	\end{theorem}
+	\begin{proof}
+		对任意$\varepsilon>0$,当$k$充分大时在$A_\delta$上有$|f_k(x)-f(x)|<\varepsilon$.
+		所以此时
+		$$m\Bigl(\Bigl\{x\in E\Bigm| |f_n(x)-f(x)|>\varepsilon\Bigr\}\Bigr)
+		\le m(E-A_\delta)<\delta,$$
+		令$\delta\to 0$即得.
+	\end{proof}
+	
+	\begin{definition}
+		$\{f_n\}$为$E$上可测函数列,对任意的$\varepsilon>0$,若有
+		$$\lim_{j,k\to\infty}{m\Bigl(\Bigl\{x\in E\Bigm| |f_j(x)-f_k(x)|>\varepsilon\Bigr\}\Bigr)}=0,$$
+		则称$\{f_n\}$为\textbf{依测度Cauchy列}.
+	\end{definition}
+	\begin{theorem}\label{thm_measure_cauchy}
+		若$\{f_k\}$为依测度Cauchy列,则存在$f$使得$f_k\xrightarrow{m}f$.
+	\end{theorem}
+	\begin{proof}
+		由依测度Cauchy列定义,对任意的$i$,我们可以取$k_i$,使得对任意的$l,j\ge k_i$,
+		$$m\left(\left\{x\in E\middle| |f_l(x)-f_j(x)|>\frac{1}{2^i}\right\}\right)
+		<\frac{1}{2^i}.$$
+		
+		不妨设$k_i\le k_{i+1}$.令
+		$$E_i=\left\{x\in E\middle| |f_{k_i}(x)-f_{k_{i+1}}(x)|>\frac{1}{2^i}\right\},$$
+		那么由上述可知$m(E_i)<\frac{1}{2^i}$.
+		
+		令$S=\limsup_{i\to\infty}{E_i}$,则$m(S)=0$.
+		而对任意的$x\notin S$,存在$j$使得$x\notin\bigcup_{i\ge j}{E_i}$,从而对任意$i\ge j$,$|f_{k_{i+1}}(x)-f_{k_i}(x)|<\frac{1}{2^i}$.
+		于是级数
+		$$f_{k_1}(x)+\sum_{i=1}^\infty{\left[f_{k_{i+1}}(x)-f_{k_i}(x)\right]}$$
+		在$E-S$上绝对收敛,设该级数的值为$f(x)$.
+		
+		此时,$f_{k_i}\to f\ (i\to\infty)$在每个$E-\bigcup_{i\ge j}{E_i}$上一致,也即$f_{k_i}$近一致收敛到$f$.于是根据\textbf{定理\ref{thm_near_uniform}},$f_{k_i}\xrightarrow{m}f$.最后利用依测度Cauchy列性质即知$f_k\xrightarrow{m}f$.
+	\end{proof}
+	\begin{theorem}[Riesz-Fisher定理]
+		若$f_k\xrightarrow{m}f$,则存在$\{f_k\}$的子列$\{f_{k_i}\}$\ a.e.收敛于$f$.
+	\end{theorem}
+	\begin{proof}
+		由$f_k$依测度收敛可知$f_k$是依测度Cauchy列.从而根据\textbf{定理\ref{thm_measure_cauchy}}的证明过程可知存在子列$f_{k_i}\to f\ (i\to\infty)$\ a.e.
+	\end{proof}
+	
+	\subsection{$L^p$空间}
+	
+	\begin{definition}
+		设$f$是$E$上可测函数,$0<p<+\infty$.记
+		$$\|f\|_p=\left(\int_E{|f(x)|^p\,\mathrm{d}x}\right)^\frac{1}{p},$$
+		并称$L^p(E)=\{f\mid\|f\|_p<+\infty\}$为$E$上的\textbf{$L^p$空间}.
+	\end{definition}
+	\begin{definition}
+		设$f$是$E$上可测函数.称
+		$$\|f\|_\infty=\sup\Bigl\{M\Bigm| |f(x)|\le M\ \mbox{a.e.}\Bigr\}$$
+		为$f$的\textbf{本性上确界},并称$L^\infty(E)=\{f\mid\|f\|_\infty<+\infty\}$为$E$上的\textbf{$L^\infty$空间}.
+	\end{definition}
+	\begin{remark}
+		以下一般省略$E$.
+	\end{remark}
+	\begin{corollary}
+		$L^p\ (1\le p\le+\infty)$是线性空间.
+	\end{corollary}
+	
+	\begin{definition}
+		对$1<p,q<+\infty$,如果$\frac{1}{p}+\frac{1}{q}=1$,则称$p$,$q$为一对\textbf{共轭指标}.
+		特别地,$1$和$+\infty$是一对共轭指标.
+	\end{definition}
+	\begin{theorem}[Holder不等式]
+		设$p,q$是一对共轭指标,$f\in L^p,g\in L^q$,那么
+		$$\|fg\|_1\le\|f\|_p\cdot\|g\|_q.$$
+	\end{theorem}
+	\begin{proof}
+		$p=1$或$q=1$时显然.若$1<p,q<+\infty$,不妨设$\|f\|_p=\|g\|_q=1$.
+		
+		利用不等式$a^\frac{1}{p}b^\frac{1}{q}\le\frac{a}{p}+\frac{b}{q}\ (a,b>0)$,我们有
+		$$\|fg\|_1=\int{|f(x)g(x)|\,\mathrm{d}x}\le\int{\frac{|f(x)|^p}{p}+\frac{|g(x)|^q}{q}}=\frac{1}{p}+\frac{1}{q}=1.$$
+	\end{proof}
+	\begin{theorem}[Minkowski不等式]
+		设$1\le p\le+\infty$,$f,g\in L^p$,则有
+		$$\|f+g\|_p\le\|f\|_p+\|g\|_p.$$
+	\end{theorem}
+	\begin{proof}
+		$p=1$或$p=+\infty$时显然.若$1<p<+\infty$,则有
+		\begin{align*}
+			& \int{|f(x)+g(x)|^p\,\mathrm{d}x} \\
+			& \le \int{|f(x)+g(x)|^{p-1}|f(x)|\,\mathrm{d}x}+\int{|f(x)+g(x)|^{p-1}|g(x)|\,\mathrm{d}x} \\
+			& \le \|f+g\|_p^{p-1}\cdot(\|f\|_p+\|g\|_p).
+		\end{align*}
+		
+		其中第二个不等号利用了Holder不等式.两边除以$\|f+g\|_p^{p-1}$即得.
+	\end{proof}
+	
+	\begin{definition}
+		在$L^p$空间中可以定义度量$d(f,g)=\|f-g\|_p$.
+		
+		此时若$\|f_n-f\|_p\to 0\ (n\to\infty)$,则称$f_n$\ \textbf{$L^p$收敛}于$f$,记作$f_n\xrightarrow{L^p}f$.同理可以定义\textbf{$L^p$\ Cauchy列}.
+	\end{definition}
+	\begin{theorem}[$L^p$空间的完备性]
+		设$\{f_k\}$是$L^p$\ Cauchy列,则存在$f\in L^p$使得$f_k\xrightarrow{L^p}f$.
+	\end{theorem}
+	\begin{proof}
+		对任意$\varepsilon>0$,令$E_{k,l}=\Bigl\{x\in E\Bigm||f_k(x)-f_l(x)|>\varepsilon\Bigr\}$,则
+		$$\int{|f_k(x)-f_l(x)|^p}\ge\varepsilon^pm(E_{k,l}),$$
+		令$k,l\to\infty$即知$m(E_{k,l})\to0$,所以$\{f_k\}$是依测度Cauchy列.
+		
+		由Riesz-Fisher定理可知,存在$f$和子列$f_{k_i}\to f$\ a.e.,再由Fatou引理得
+		$$\int{|f_k-f|^p}\le\liminf_{i\to\infty}{\int{|f_k-f_{k_i}|^p}}\to0,$$
+		所以$\|f_k-f\|_p\to0$.
+		
+		最后由$\|f\|\le\|f-f_k\|_p+\|f_k\|_p$即知$f\in L^p$.
+	\end{proof}
+	
+	\begin{definition}
+		设$\mathcal{G}\subset L^p$,如果对任意的$f\in L^p$以及$\varepsilon>0$,都存在$g\in\mathcal{G}$使得$\|f-g\|_p<\varepsilon$,则称$\mathcal{G}$是$L^p$空间中稠密集.
+		
+		若$L^p$空间存在可数稠密子集,则称$L^p$空间是可分的.
+	\end{definition}
+	\begin{corollary}\label{cor_Lp_dense_set}
+		\hspace*{\fill}
+		
+		\begin{enumerate}
+			\item $L^p$中有紧支撑的连续函数集、有紧支撑的阶梯函数集均为$L^p$空间中稠密集.
+			\item $L^p$空间是可分空间.
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[$L^p$空间中的范数公式]
+		\hspace*{\fill}
+		
+		\begin{enumerate}
+			\item 若$f\in L^p$,$1\le p<+\infty$,且$q$是$p$的共轭指标,则存在$g\in L^q$使得$$\|f\|_p=\int{fg}.$$
+			\item 若$f\in L^\infty$,则$$\|f\|_\infty=\sup_{g\in L^1,\|g\|_1=1}{\left|\int{fg}\right|}.$$
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 若$p=1$,令$$g(x)=\mathrm{sgn}f(x)$$即得.
+			
+			若$1<p<+\infty$,令$$g(x)=\frac{|f(x)|^{p-1}\mathrm{sgn}f(x)}{\|f\|_p^{p-1}}$$即得.
+			
+			\item 左式$\ge$右式显然.故只需证明左式$\le$右式.
+			
+			设$\|f\|_\infty=M$,则对任意的$\varepsilon>0$,总是存在$A\subset E$,使得$m(A)=a>0$,且在$A$上$|f(x)|>M-\varepsilon$.此时令
+			$$g(x)=\frac{1}{a}\chi_A(x)\mathrm{sgn}f(x)$$
+			即得$\|g\|_1=\frac{1}{a}\cdot a=1$,且$\int{fg}=\frac{1}{a}\int_A{|f|}>M-\varepsilon$,得证.
+		\end{enumerate}
+	\end{proof}
+	
+	\section{微分论}
+	微分论讨论对Lebesgue积分,微积分基本定理何时成立的问题.这又分为微分的积分和积分的微分两种情况.
+	
+	\subsection{微分的积分}
+	
+	\begin{definition}
+		若$f$可积,定义其\textbf{Hardy-Littlewood极大函数}为
+		$$f^*(x)=\sup_{\mbox{开球}B\ni x}{\frac{1}{m(B)}\int_B{|f(y)|\,\mathrm{d}y}}$$
+	\end{definition}
+	\begin{lemma}[Vitali覆盖引理]
+		设$\mathcal{B}=\{B_1,\cdots,B_N\}$为一组开球,则可以选出其中互不相交的若干球$B_{i_1},\cdots,B_{i_k}$,使得
+		$$m\left(\bigcup_{l=1}^N{B_l}\right)\le 3^d\sum_{j=1}^k{m(B_{i_j})}.$$
+	\end{lemma}
+	\begin{corollary}
+		若$f$可积,则其极大函数$f^*$有性质:
+		\begin{enumerate}
+			\item $f^*$可测.
+			\item $f^*<+\infty$\ a.e.
+			\item 对任意的$\alpha>0$,有
+			$$m(\{x\mid f^*(x)>\alpha\})\le\frac{A}{\alpha}\|f\|_1,$$
+			其中$A=3^d$.
+		\end{enumerate}
+	\end{corollary}
+	\begin{proof}
+		设$E_\alpha=\{x\mid f^*(x)>\alpha\}$,容易证明$E_\alpha$是开集,所以性质1成立.而性质2是性质3的推论,故只需证3.
+		
+		根据极大函数的定义,对任意$x\in E_\alpha$,存在$B_x\ni x$,使得
+		$$m(B_x)<\frac{1}{\alpha}{\int_{B_x}{|f(y)|\,\mathrm{d}y}}.$$
+		
+		任取$E_\alpha$的紧子集$K$,由有限覆盖定理可知存在$B_1,\cdots,B_N$使得$K\subset\bigcup_{l=1}^N{B_l}$.此时应用Vitali覆盖定理,得到不交的球$B_{i_1},\cdots,B_{i_k}$,使得
+		$$m\left(\bigcup_{l=1}^N{B_l}\right)\le 3^d\sum_{j=1}^k{m(B_{i_j})}.$$
+		
+		进一步,就有
+		$$m(K)\le 3^d\sum_{j=1}^k{m(B_{i_j})}\le\frac{3^d}{\alpha}\int{|f(y)|\,\mathrm{d}y}=\frac{A}{\alpha}\|f\|_1,$$
+		利用$K$逼近$E_\alpha$即得证.
+	\end{proof}
+	
+	\begin{theorem}[Lebesgue微分定理]
+		若$f$可积,则对于a.e.的$x$,有
+		$$\lim_{B\ni x,\ m(B)\to 0}{\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}}=f(x).$$
+	\end{theorem}
+	\begin{proof}
+		对任意的$\alpha>0$,令
+		$$E_\alpha=\left\{x\middle|\limsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}>2\alpha\right\},$$
+		则只需证$m(E_\alpha)=0$.
+		
+		固定$\alpha$,对任意的$\varepsilon>0$,由\textbf{推论\label{cor_Lp_dense_set}}可知,存在有紧支撑集的连续函数$g$满足$\|f-g\|_1<\varepsilon$.
+		
+		由连续性,可知
+		$$\lim_{B\ni x,\ m(B)\to 0}{\frac{1}{m(B)}\int_B{g(y)\,\mathrm{d}y}}=g(x)$$
+		对任意的$x$成立.此时又有
+		\begin{align*}
+			& \frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x) \\
+			& = \frac{1}{m(B)}\int_B{[f(y)-g(y)]\,\mathrm{d}y}
+			+ \left[\frac{1}{m(B)}\int_B{g(y)\,\mathrm{d}y}-g(x)\right]
+			+ [g(x)-f(x)],
+		\end{align*}
+		从而
+		$$\limsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}
+		\le (f-g)^*(x) + |f(x)-g(x)|.$$
+		
+		令$F_\alpha=\{x\mid(f-g)^*(x)>\alpha\},G_\alpha=\{x\mid|f(x)-g(x)|>\alpha\}$,则$E_\alpha\subset F_\alpha\cup G_\alpha$,且由极大函数的性质可知
+		$$m(E_\alpha)\le\frac{A+1}{\alpha}\|f-g\|_1=\frac{A+1}{\alpha}\varepsilon.$$
+		
+		令$\varepsilon\to 0$即得.
+	\end{proof}
+	
+	\subsection{微分的积分}
+	
+	\begin{definition}
+		设$f(x)$为区间$[a,b]$上的函数,若存在$M>0$,使得对于$[a,b]$上的任意分划$a=t_0<\cdots<t_N=b$,都有$\sum_{j=1}^N{|f(t_j)-f(t_{j-1})|}\le M$,则称$f$为$[a,b]$上的\textbf{有界变差函数}.
+	\end{definition}
+	\begin{corollary}
+		$f$是有界变差函数当且仅当$f$可以写成两个单调递增且有界的函数之差.
+	\end{corollary}
+	\begin{theorem}[有界变差函数的可微性]
+		若$f$是$[a,b]$上的有界变差函数,则$f$\ a.e.可微.
+	\end{theorem}
+	
+	\begin{theorem}
+		若$f$是$[a,b]$上单调递增的连续函数,则$f$\ a.e.可微,且满足
+		$$\int_a^b{f'(x)\,\mathrm{d}x}\le f(b)-f(a).$$
+	\end{theorem}
+	\begin{remark}
+		上述等号不一定能成立.考虑Cantor函数,它在Cantor集的余集上为常数,且从$0$单调递增到$1$.该函数连续,但微分a.e.为$0$.
+	\end{remark}
+	
+	\begin{definition}
+		设$f(x)$为区间$[a,b]$上的函数,若对任意的$\varepsilon>0$,总存在$\delta>0$,使得对任意的一组不交区间$(a_k,b_k)\subset[a,b]$,只要$\sum_{k=1}^N{(b_k-a_k)}<\delta$,就有$\sum_{k=1}^N{|f(b_k)-f(a_k)|}<\varepsilon$,则称$f$为$[a,b]$上的\textbf{绝对连续函数}.
+	\end{definition}
+	\begin{theorem}[绝对连续函数的可微性]
+		设$f$为$[a,b]$上的绝对连续函数.那么
+		\begin{enumerate}
+			\item $f$\ a.e.可微;
+			\item 若$f'=0$\ a.e.,则$f$为常值函数.
+			\item $f'$在$[a,b]$上可积,且有
+			$$f(b)-f(a)=\int_a^b{f'(x)\,\mathrm{d}x}.$$
+		\end{enumerate}
+	\end{theorem}
+	\begin{corollary}
+		若$f$可积,则函数
+		$$F(x)=\int_a^x{f(y)\,\mathrm{d}y}$$
+		是绝对连续函数,且$F'=f$\ a.e.
+	\end{corollary}
+	
+	\section{抽象测度论}
+	抽象测度论将$\mathbb{R}^n$上的Lebesgue测度推广到一般的空间当中去.
+	
+	\subsection{抽象测度的构造}
+	从代数上的预测度出发,可以构造出整个子集族上的外测度;将外测度限制在Caratheodory可测集上,就得到了测度.
+	
+	\begin{definition}
+		设$X$为非空集合,$\mathcal{A}\subset\mathcal{P}(X)$是$X$的一个子集族.
+		\begin{enumerate}
+			\item 若$\mathcal{A}$对集合的有限并和补封闭,则称$\mathcal{A}$为$X$上的\textbf{代数}.
+			\item 进一步,若$\mathcal{A}$还对集合的可数并封闭,则称$\mathcal{A}$为$X$上的\textbf{$\sigma$-代数}.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{definition}
+		设$\mathcal{A}$是代数,$\mu_0:\mathcal{A}\to[0,+\infty]$满足:
+		\begin{enumerate}
+			\item $\mu_0(\emptyset)=0$;
+			\item 若$A_j\in\mathcal{A}$不交,且$\bigcup_{j=1}^\infty\in\mathcal{A}$,则
+			$$\mu_0\left(\bigcup_{j=1}^\infty{A_j}\right)=\sum_{j=1}^\infty{\mu_0(A_j)}.$$
+		\end{enumerate}
+		则称$\mu_0$为$\mathcal{A}$上的\textbf{预测度}.
+	\end{definition}
+	
+	\begin{definition}
+		设$X$为非空集合,$\mu_*:\mathcal{P}(X)\to[0,+\infty]$满足:
+		\begin{enumerate}
+			\item $\mu_*(\emptyset)=0$;
+			\item 若$E\subset F$,则$\mu_*(E)\le\mu_*(F)$;
+			\item 对任意一族$E_j$,有
+			$$\mu_*\left(\bigcup_{j=1}^\infty{E_j}\right)\le\sum_{j=1}^\infty{\mu_*(E_j)}.$$
+		\end{enumerate}
+		则称$\mu_*$为$\mathcal{P}(X)$上的外测度.
+	\end{definition}
+	
+	\begin{definition}
+		若$\mu_*$为$\mathcal{P}(X)$上的外测度,$A\subset X$.如果对于任意的$E\subset X$,有
+		$$\mu_*(E)=\mu_*(E\cap A)+\mu_*(E\cap A^c),$$
+		则称$A$是$\mu_*$的\textbf{Caratheodory可测集},简称$\mu_*$-可测集.
+	\end{definition}
+	
+	\begin{theorem}[从预测度构造外测度]
+		设$\mu_0$是代数$\mathcal{A}$上的预测度,对任意$E\subset X$,定义
+		$$\mu_*(E)=\inf\left\{\sum_{j=1}^\infty{\mu_0(E_j)}\middle|E_j\in\mathcal{A},E\subset\bigcup_{j=1}^\infty{E_j}\right\},$$
+		那么就有:
+		\begin{enumerate}
+			\item $\mu_*$是$\mathcal{P}(X)$上外测度;
+			\item $\mu_*|_\mathcal{A}=\mu_0$;
+			\item $\mathcal{A}$中任一集合均为$\mu_*$-可测集.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item $\mu_*(\emptyset)=0$和$E\subset F\Rightarrow\mu_*(E)\le\mu_*(F)$显然.故只需证明$\mu_*\left(\bigcup_{j=1}^\infty{E_j}\right)\le\sum_{j=1}^\infty{\mu_*(E_j)}$.
+			
+			根据定义,对任意的$\varepsilon>0$,存在$E_{jk}$使得$E_j\subset\bigcup_{k=1}^\infty{E_{jk}}$,且
+			$$\sum_{k=1}^\infty{\mu_0(E_{jk})}<\mu_*(E_j)+\frac{\varepsilon}{2^j}.$$
+			
+			于是就有
+			$$\mu_*\left(\bigcup_{j=1}^\infty{E_j}\right)\le\sum_{j,k=1}^\infty{\mu_0(E_{jk})}\le\sum_{j=1}^\infty{\mu_*(E_j)}+\varepsilon.$$
+			
+			令$\varepsilon\to 0$即得.
+			
+			\item 对于任意$E\subset A$,$\mu_*(E)\le\mu_0(E)$显然,故只需证明$\mu_*(E)\ge\mu_0(E)$.
+			
+			若$E\subset\bigcup_{j=1}^\infty{E_j}$,$E_j\in\mathcal{A}$.取$\widetilde{E}_j=E_j-\bigcup_{k=1}^{j-1}{E_k}$,则$\widetilde{E}_j\in\mathcal{A}$互不相交,且$\bigcup_{j=1}^\infty{E_j}=\bigcup_{j=1}^\infty{\widetilde{E}_j}$.此时有
+			$$\mu_0(E)\le\mu_0\left(\bigcup_{j=1}^\infty{\widetilde{E}_j}\right)=\sum_{j=1}^\infty{\mu_0\left(\widetilde{E}_j\right)}\le\sum_{j=1}^\infty{\mu_0(E_j)}.$$
+			
+			取下确界即得$\mu_0(E)\le\mu_*(E)$.
+			
+			\item 只需证明对任意$A\in\mathcal{A}$和$E\subset X$,都有$\mu_*(E)\ge\mu_*(E\cap A)+\mu_*(E\cap A^c)$.
+			
+			不妨设$\mu_*(E)<+\infty$.那么根据定义,对任意的$\varepsilon>0$,存在$E_j$使得$E\subset\bigcup_{j=1}^\infty{E_j}$,且
+			$$\sum_{j=1}^\infty{\mu_0(E_j)}\le\mu_*(E)+\varepsilon.$$
+			
+			此时$E\cap A=\bigcup_{j=1}^\infty{(E_j\cap A)},E\cap A^c=\bigcup_{j=1}^\infty{(E_j\cap A^c)}$,从而有
+			\begin{align*}
+				& \mu_*(E\cap A)+\mu_*(E\cap A^c) \\
+				& \le\sum_{j=1}^\infty{[\mu_0(E_j\cap A)+\mu_0(E_j\cap A^c)]} \\
+				& =\sum_{j=1}^\infty{\mu_0(E_j)} \\
+				& \le\mu_*(E)+\varepsilon.
+			\end{align*}
+			
+			令$\varepsilon\to 0$即得证.
+		\end{enumerate}
+	\end{proof}
+	
+	\begin{definition}
+		设$\mathcal{M}$为$X$上的$\sigma$-代数,$\mu:\mathcal{M}\to[0,+\infty]$满足:
+		\begin{enumerate}
+			\item $\mu(\emptyset)=0$;
+			\item 若$E_j\in\mathcal{M}$不交,则
+			$$\mu\left(\bigcup_{j=1}^\infty{E_j}\right)=\sum_{j=1}^\infty{\mu(E_j)}.$$
+		\end{enumerate}
+		则称$\mu$为$\mathcal{M}$上的\textbf{测度},$(X,\mathcal{M},\mu)$称为测度空间.
+	\end{definition}
+	\begin{definition}
+		设$\mu$为$\mathcal{M}$上的测度.若$\mu(X)<+\infty$,则称$\mu$为\textbf{有限测度};若$X=\bigcup_{j=1}^\infty{E_j}$且满足$\mu(E_j)<+\infty$,则称$\mu$为\textbf{$\sigma$-有限测度}.
+	\end{definition}
+	\begin{definition}
+		设$\mu$为$\mathcal{M}$上的测度.若零测集的子集均可测,即对任意$\mu(E)=0$,如果$F\subset E$,那么$F\in\mathcal{M}$,则称$\mu$是\textbf{完备测度}.
+	\end{definition}
+	\begin{corollary}
+		设$\mu$为$\mathcal{M}$上的测读,则它满足:
+		\begin{enumerate}
+			\item (单调性)若$E,F\in\mathcal{M}$,$E\subset F$,则$\mu_*(E)\le \mu_*(F)$.
+			\item (可数次可加性)若$E_j\in\mathcal{M}$,则
+			$$\mu_*\left(\bigcup_{j=1}^\infty{E_j}\right)\le\sum_{j=1}^\infty{\mu_*(E_j)}.$$
+			\item 若$E_j\in\mathcal{M}$且$E_j\subset E_{j+1}$,则
+			$$\mu_*\left(\bigcup_{j=1}^\infty{E_j}\right)=\lim_{j\to\infty}{\mu_*(E_j)}.$$
+			\item 若$E_j\in\mathcal{M}$且$E_j\supset E_{j+1}$,$\mu(E_1)<+\infty$,则
+			$$\mu_*\left(\bigcap_{j=1}^\infty{E_j}\right)=\lim_{j\to\infty}{\mu_*(E_j)}.$$
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[从外测度构造测度]
+		设$\mu_*$是$\mathcal{P}(X)$上的外测度.令$\mathcal{M}$为全体$\mu_*$-可测集构成的集族,则$\mathcal{M}$为$\sigma$-代数,且$\mu=\mu_*|_\mathcal{M}$为$\mathcal{M}$上的完备测度.
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 首先证明$\mathcal{M}$是$\sigma$-代数.显然$\mathcal{M}$对集合的补封闭.
+			
+			若$A_1,A_2\in\mathcal{M}$,对任意的$E\subset X$,有
+			\begin{align*}
+				\mu_*(E) & =\mu_*(E\cap A_1)+\mu_*(E\cap A_1^c) \\
+				& =\mu_*(E\cap A_1\cap A_2)+\mu_*(E\cap A_1\cap A_2^c)+\mu_*(E\cap A_1^c\cap A_2)+\mu_*(E\cap A_1^c\cap A_2^c) \\
+				& \ge\mu_*(E\cap(A_1\cup A_2))+\mu_*(E\cap(A_1\cup A_2)^c),
+			\end{align*}
+			所以$A_1\cup A_2\in\mathcal{M}$,从而$\mathcal{M}$对有限并和有限交封闭.
+			
+			此时只需证$\mathcal{M}$对可数不交并封闭.设$A_j\in\mathcal{M}$不交,并记$G_n=\bigcup_{j=1}^n{A_j},G=\bigcup_{j=1}^\infty{A_j}$.那么$G_n\in\mathcal{M}$,并且
+			\begin{align*}
+				\mu_*(E) & =\mu_*(E\cap G_n)+\mu_*(E\cap G_n^c) \\
+				& =\sum_{j=1}^n{\mu_*(E\cap A_j)}+\mu_*(E\cap G_n^c) \\
+				& \ge\sum_{j=1}^n{\mu_*(E\cap A_j)}+\mu_*(E\cap G^c).
+			\end{align*}
+			
+			令$n\to\infty$,并利用外测度的可数次可加性即得
+			$$\mu_*(E)\ge\sum_{j=1}^(E\cap A_j)+\mu_*(E\cap G^c)\ge\mu_*(E\cap G)+\mu_*(E\cap G^c),$$
+			所以$G\in\mathcal{M}$,从而$\mathcal{M}$为$\sigma$-代数.
+			
+			\item 再证明$\mu$是$\mathcal{M}$上的完备测度.$\mu(\emptyset)=\mu_*(\emptyset)=0$显然;又由上面的证明可以立知$\mu$满足可数可加性,所以$\mu$是测度.
+			
+			设$\mu(A)=0,B\subset A$.对任意的$E\subset X$,我们有
+			$$\mu_*(E\cap B)+\mu_*(E\cap B^c)\le\mu(A)+\mu_*(E)=\mu_*(E),$$
+			从而$B\in\mathcal{M}$.$\mu$的完备性得证.
+		\end{enumerate}
+	\end{proof}
+	
+	\subsection{抽象测度上的积分}
+	可测函数、积分、$L^p$空间的概念都可以很容易地推广到抽象测度空间上.
+	
+	\begin{definition}
+		设$f$是定义在$X$上的函数,且对任意$a\in\mathbb{R}$,集合$\{x\in E\mid f(x)<a\}\in\mathcal{M}$,则称$f$为$X$上的\textbf{可测函数}.
+	\end{definition}
+	\begin{definition}
+		在抽象测度空间中,可以类似Lebesgue测度一样依次定义简单函数、有紧支撑集的有界函数、非负函数、一般函数的\textbf{积分}.此时设$f$为$X$上的可测函数,其积分记为$\int{f(x)\mathrm{d}\mu}$.
+		
+		若$f$满足$\int{|f(x)|\mathrm{d}\mu}<+\infty$,则称$f$\textbf{可积}.
+	\end{definition}
+	\begin{remark}
+		Fatou引理、单调收敛定理、控制收敛定理对抽象测度上的积分均成立.
+	\end{remark}
+	\begin{definition}
+		设$f$在$X$上可测,$p\ge 1$.则定义其$L^p$-范数
+		$$\|f\|_p=\left(\int{|f(x)|^p\mathrm{d}\mu}\right)^\frac{1}{p}.$$
+		
+		所有$\|f\|_p<+\infty$的函数构成空间$L^p(X,\mu)$.
+	\end{definition}
+	\begin{remark}
+		\begin{enumerate}
+			\item $L^p(X,\mu)$按照$L^p$-范数构成Banach空间(完备的线性赋范空间).
+			\item $L^2(X,\mu)$关于内积
+			$$\langle f,g\rangle=\int{f(x)g(x)\mathrm{d}\mu}$$
+			构成Hilbert空间(完备的内积空间).
+		\end{enumerate}
+	\end{remark}
+	
+	\subsection{测度的绝对连续性}
+	这里我们将微分的概念推广到抽象测度上.
+	
+	\begin{definition}
+		设$\mathcal{M}$为$X$上的$\sigma$-代数,$\nu:\mathcal{M}\to[-\infty,+\infty]$满足:
+		\begin{enumerate}
+			\item $\nu(\emptyset)=0$;
+			\item 要么$-\infty<\nu\le+\infty$,要么$-\infty\le\nu<+\infty$;
+			\item 若$E_j\in\mathcal{M}$不交,则
+			$$\nu\left(\bigcup_{j=1}^\infty{E_j}\right)=\sum_{j=1}^\infty{\nu(E_j)},$$
+			且如果等号左侧是有限值,那么等号右侧的级数绝对收敛.
+		\end{enumerate}
+		则称$\nu$是$\mathcal{M}$上的\textbf{带号测度}.
+	\end{definition}
+	\begin{remark}
+		每个测度都是带号测度.在本节中,测度也叫做正测度,以作区分.
+	\end{remark}
+	
+	\begin{definition}
+		设$\mu$,$\nu$是$\mathcal{M}$上的两个带号测度.若存在$E,F\in\mathcal{M}$使得$E\cap F=\emptyset,E\cup F=X$,且$\mu$在$F$的子集上取值为$0$,$\nu$在$E$的子集上取值为$0$,则称$\mu$和$\nu$\textbf{互相奇异},记作$\mu\perp\nu$.
+	\end{definition}
+	\begin{theorem}[Jordan分解]
+		若$\nu$为带号测度,则存在唯一的正测度$\nu^+,\nu^-$,使得$\nu=\nu^+-\nu^-$,并且$\nu^+\perp\nu^-$.
+	\end{theorem}
+	
+	\begin{definition}
+		设$\mu$和$\nu$分别为$\mathcal{M}$上的正测度和带号测度.若对任意$E\in\mathcal{M}$,只要$\mu(E)=0$,那么就有$\nu(E)=0$,则称$\nu$关于$\mu$\textbf{绝对连续},记作$\nu\ll\mu$.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 若正测度$\mu$和带号测度$\nu$满足$\nu\perp\mu$且$\nu\ll\mu$,则$\nu=0$.
+			\item $\nu\ll\mu$等价于对任意的$\varepsilon>0$,存在$\delta>0$,使得对任意$E\in\mathcal{M}$,只要$\mu(E)<\delta$,就有$|\nu(E)|<\varepsilon$.
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[Lebesgue-Radon-Nikodym定理]
+		设$\mu$和$\nu$分别是$\mathcal{M}$上的$\sigma$-有限正测度和$\sigma$-有限带号测度.则存在唯一的带号测度$\lambda,\rho$,使得$\lambda\perp\mu$,$\rho\ll\mu$,且$\nu=\lambda+\rho$.
+		
+		此时存在$\mu$-可积函数$f$,使得$\mathrm{d}\rho=f\,\mathrm{d}\mu$,且$f$在$\mu$-a.e.相等意义下唯一.
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 首先考虑$\mu$和$\nu$均为有限正测度的情形.
+			
+			设$\phi=\mu+\nu$,考虑$L^2(X,\phi)$上的线性泛函
+			$$\ell(\psi)=\int_X{\psi\,\mathrm{d}\nu},$$
+			根据Cauchy-Schwarz不等式有
+			$$|\ell(\psi)|\le\int_X{|\psi|\,\mathrm{d}\nu}
+			\le\int_X{|\psi|\,\mathrm{d}\phi}
+			\le\phi(X)^\frac{1}{2}\left(\int_X{|\psi|^2\,\mathrm{d}\phi}\right)^\frac{1}{2},$$
+			所以$\ell$有界,从而由Riesz表示定理可知存在$g\in L^2(X,\phi)$使得
+			$$\int_X{\psi\,\mathrm{d}\nu}=\int_X{\psi g\,\mathrm{d}\phi}$$
+			对任意$\psi\in L^2(X,\phi)$成立.
+			
+			对任意$E\in\mathcal{M}$且$\rho(E)>0$,取$\psi=\chi_E$,并利用$\nu\le\phi$得到
+			$$0\le\frac{1}{\phi(E)}\int_E{g(x)\,\mathrm{d}\phi}\le 1,$$
+			因此$0\le g(x)\le 1$\ a.e.不妨就假设此式处处成立,此时对任意$\psi$,成立
+			$$\int{\psi(1-g)\,\mathrm{d}\nu}=\int{\psi g\,\mathrm{d}\mu}.$$
+			
+			考虑$A=\{x\mid 0\le g(x)<1\}$和$B=\{x\mid g(x)=1\}$,并在$\mathcal{M}$上定义测度
+			$$\rho(E)=\nu(A\cap E),\lambda(E)=\nu(B\cap E),$$
+			则$\rho\ll\mu$和$\nu=\rho+\mu$显然.与此同时,取$\psi=\chi_B$就得到$\mu(B)=0$,所以$\lambda\perp\mu$.
+			
+			最后,取$\psi=\chi_E(1+g+\cdots+g^n)$,则得到
+			$$\int_E{(1-g^{n+1})\,\mathrm{d}\nu}=\int_E{g(1+\cdots+g^n)\,\mathrm{d}\mu},$$
+			令$n\to\infty$即得
+			$$\rho(E)=\int_E{f\,\mathrm{d}\mu},\mbox{其中}f=\frac{g}{1-g}.$$
+			
+			\item 若$\mu$和$\nu$为$\sigma$-有限正测度,那么我们可以找到$X=\bigcup_{j=1}^\infty{E_j}$,使得$\mu_(E_j)<+\infty,\nu(E_j)<+\infty$.
+			
+			在$\mathcal{M}$上定义有限正测度$\mu_j(E)=\mu(E\cap E_j),\nu_j(E)=\nu(E\cap E_j)$,那么对每个$\nu_j=\lambda_j+\rho_j$使得$\lambda_j\perp\mu_j$且$\rho_j\ll\mu_j$,此时还有$\mathrm{d}\rho_j=f_j\,\mathrm{d}\mu_j$.
+			
+			此时令$f=\sum_{j=1}^\infty{f_j}$,$\lambda=\sum_{j=1}^\infty{\lambda_j}$,$\rho=\sum_{j=1}^\infty{\rho_j}$,容易验证$f,\lambda,\rho$满足要求.
+			
+			\item 若$\nu$为$\sigma$-有限带号测度,考虑其Jordan分解$\nu=\nu^+-\nu^-$,得到对应的$f^+,f^-,\lambda^+,\lambda^-,\rho^+,\rho^-$病令$f=f^+-f^-,\lambda=\lambda^+-\lambda^-,\rho=\rho^+-\rho^-$即得.
+			
+			\item 唯一性显然.
+		\end{enumerate}
+	\end{proof}
+	
+	\begin{definition}
+		若$\nu\ll\mu$,由Lebesgue-Radon-Nikodym定理存在唯一的函数$f$使得$\mathrm{d}\nu=f\,\mathrm{d}\mu$.此时称$f$为$\nu$相对于$\mu$的\textbf{Radon-Nikodym导数},并记作$f=\frac{\mathrm{d}\nu}{\mathrm{d}\mu}$.
+	\end{definition}
+	\begin{theorem}[链式法则]
+		设$\nu$是$\sigma$-有限带号测度,$\mu,\lambda$为$\sigma$-有限正测度,且$\nu\ll\mu$,$\mu\ll\lambda$.此时
+		
+		\begin{enumerate}
+			\item 若$g$为$\nu$-可积函数,则$g\frac{\mathrm{d}\nu}{\mathrm{d}\mu}$为$\mu$-可积函数,且有
+			$$\int{g\,\mathrm{d}\nu}=\int{g\frac{\mathrm{d}\nu}{\mathrm{d}\mu}\,\mathrm{d}\mu}.$$
+			
+			\item $\nu\ll\lambda$,且$\frac{\mathrm{d}\nu}{\mathrm{d}\lambda}=\frac{\mathrm{d}\nu}{\mathrm{d}\mu}\cdot\frac{\mathrm{d}\mu}{\mathrm{d}\lambda}$\ $\lambda$-a.e.成立.
+		\end{enumerate}
+	\end{theorem}
+	
+\end{document}
