@@ -195,7 +195,7 @@
 	
 	\begin{lemma}[Borel-Cantelli引理]
 		若$E_k$可测,且$\sum_{k=1}^\infty{m(E_k)}<+\infty$.令
-		$$E=\limsup_{k\to\infty}{E_k}=\{x\mid x\mbox{在无穷多的}E_k\mbox{中出现}\},$$
+		$$E=\varlimsup_{k\to\infty}{E_k}=\{x\mid x\mbox{在无穷多的}E_k\mbox{中出现}\},$$
 		那么$m(E)=0$.
 	\end{lemma}
 	
@@ -235,7 +235,7 @@
 	\begin{theorem}
 		对于可测函数,有如下性质:
 		\begin{enumerate}
-			\item 设$\{f_n\}$为可测函数列,则$\sup_{n\ge 1}{f_n}$,$\inf_{n\ge 1}{f_n}$,$\limsup_{n\to\infty}{f_n}$,$\liminf_{n\to\infty}{f_n}$均为可测函数.
+			\item 设$\{f_n\}$为可测函数列,则$\sup_{n\ge 1}{f_n}$,$\inf_{n\ge 1}{f_n}$,$\varlimsup_{n\to\infty}{f_n}$,$\varliminf_{n\to\infty}{f_n}$均为可测函数.
 			
 			特别地,若$\lim_{n\to\infty}{f_n(x)}=f(x)$,则$f$为可测函数.
 			\item 若$f$可测,$k$为正整数,则$f^k$可测;若$f$,$g$可测,则$f+g$,$fg$可测.
@@ -254,7 +254,7 @@
 	
 	\hspace*{\fill}
 	
-	关于可测集、可测函数的逼近关系,我们可以总结出三条Littlewood三原理:
+	关于可测集、可测函数的逼近关系,我们可以总结出三条结论,即Littlewood三原理:
 	
 	\begin{enumerate}
 		\item 可测集大约等于有限个方体的并;
@@ -262,7 +262,7 @@
 		\item 收敛的可测函数列大约是一致收敛的.
 	\end{enumerate}
 	
-	第1条正是前面的\textbf{定理\ref{thm_cube_union}}(\ref{item_cube_union});而第2、3条则是后面的Lusin定理和Egorov定理.
+	第1条正是前面的\textbf{定理\ref{thm_cube_union}}(\ref{item_cube_union});而第2、3条则是下面的Lusin定理和Egorov定理.
 	
 	\begin{theorem}[Egorov定理]
 		设$f_k$是可测集$E$上的可测函数列,$m(E)<+\infty$,且$f_k\to f(k\to\infty)$在$E$上a.e.成立.
@@ -391,14 +391,14 @@
 		设$\{f_n\}$是非负函数列,$f_n(x)\to f(x)$\ a.e.
 		
 		那么就有
-		$$\int{f}\le\liminf_{n\to\infty}{\int{f_n}}.$$
+		$$\int{f}\le\varliminf_{n\to\infty}{\int{f_n}}.$$
 	\end{lemma}
 	\begin{proof}
 		设$0\le g\le f$,且$g$为有限测度集支撑的有界函数.令$g_n(x)=\min\{g(x),f_n(x)\}$,那么由有界收敛定理,
 		$$\int{g_n}\to\int{g}\ (n\to\infty).$$
 		
 		此时又有$g_n\le f_n$,从而$\int{g_n}\le\int{f_n}$,于是有
-		$$\int{g}\le\liminf_{n\to\infty}{\int{f_n}}.$$
+		$$\int{g}\le\varliminf_{n\to\infty}{\int{f_n}}.$$
 		
 		不等号左侧对$g$取上确界即得.
 	\end{proof}
@@ -498,8 +498,8 @@
 		对任意的$\varepsilon>0$,令
 		$$E_k=\Bigl\{x\in E\Bigm| |f_n(x)-f(x)|>\varepsilon\Bigr\}.$$
 		
-		由于$\limsup_{k\to\infty}{E_k}=\{x\mid\mbox{存在无限多个}k,\mbox{使得}|f_k(x)-f(x)|>\varepsilon\}$不可能包含任何收敛点,所以
-		$$m\left(\limsup_{k\to\infty}{E_k}\right)=\lim_{k\to\infty}{m\left(\bigcup_{j\ge k}{E_j}\right)}=0.$$
+		由于$\varlimsup_{k\to\infty}{E_k}=\{x\mid\mbox{存在无限多个}k,\mbox{使得}|f_k(x)-f(x)|>\varepsilon\}$不可能包含任何收敛点,所以
+		$$m\left(\varlimsup_{k\to\infty}{E_k}\right)=\lim_{k\to\infty}{m\left(\bigcup_{j\ge k}{E_j}\right)}=0.$$
 		
 		因此由$m(E_k)\le m(\bigcup_{j\ge k}{E_j})$即知$m(E_k)\to 0$,也即$f_k\xrightarrow{m}f$.
 	\end{proof}
@@ -531,7 +531,7 @@
 		$$E_i=\left\{x\in E\middle| |f_{k_i}(x)-f_{k_{i+1}}(x)|>\frac{1}{2^i}\right\},$$
 		那么由上述可知$m(E_i)<\frac{1}{2^i}$.
 		
-		令$S=\limsup_{i\to\infty}{E_i}$,则$m(S)=0$.
+		令$S=\varlimsup_{i\to\infty}{E_i}$,则$m(S)=0$.
 		而对任意的$x\notin S$,存在$j$使得$x\notin\bigcup_{i\ge j}{E_i}$,从而对任意$i\ge j$,$|f_{k_{i+1}}(x)-f_{k_i}(x)|<\frac{1}{2^i}$.
 		于是级数
 		$$f_{k_1}(x)+\sum_{i=1}^\infty{\left[f_{k_{i+1}}(x)-f_{k_i}(x)\right]}$$
@@ -608,7 +608,7 @@
 		令$k,l\to\infty$即知$m(E_{k,l})\to0$,所以$\{f_k\}$是依测度Cauchy列.
 		
 		由Riesz-Fisher定理可知,存在$f$和子列$f_{k_i}\to f$\ a.e.,再由Fatou引理得
-		$$\int{|f_k-f|^p}\le\liminf_{i\to\infty}{\int{|f_k-f_{k_i}|^p}}\to0,$$
+		$$\int{|f_k-f|^p}\le\varliminf_{i\to\infty}{\int{|f_k-f_{k_i}|^p}}\to0,$$
 		所以$\|f_k-f\|_p\to0$.
 		
 		最后由$\|f\|\le\|f-f_k\|_p+\|f_k\|_p$即知$f\in L^p$.
@@ -693,7 +693,7 @@
 	\end{theorem}
 	\begin{proof}
 		对任意的$\alpha>0$,令
-		$$E_\alpha=\left\{x\middle|\limsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}>2\alpha\right\},$$
+		$$E_\alpha=\left\{x\middle|\varlimsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}>2\alpha\right\},$$
 		则只需证$m(E_\alpha)=0$.
 		
 		固定$\alpha$,对任意的$\varepsilon>0$,由\textbf{推论\label{cor_Lp_dense_set}}可知,存在有紧支撑集的连续函数$g$满足$\|f-g\|_1<\varepsilon$.
@@ -708,7 +708,7 @@
 			+ [g(x)-f(x)],
 		\end{align*}
 		从而
-		$$\limsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}
+		$$\varlimsup_{B\ni x,\ m(B)\to 0}{\left|\frac{1}{m(B)}\int_B{f(y)\,\mathrm{d}y}-f(x)\right|}
 		\le (f-g)^*(x) + |f(x)-g(x)|.$$
 		
 		令$F_\alpha=\{x\mid(f-g)^*(x)>\alpha\},G_\alpha=\{x\mid|f(x)-g(x)|>\alpha\}$,则$E_\alpha\subset F_\alpha\cup G_\alpha$,且由极大函数的性质可知
@@ -793,7 +793,7 @@
 	\begin{definition}
 		若$\mu_*$为$\mathcal{P}(X)$上的外测度,$A\subset X$.如果对于任意的$E\subset X$,有
 		$$\mu_*(E)=\mu_*(E\cap A)+\mu_*(E\cap A^c),$$
-		则称$A$是$\mu_*$的\textbf{Caratheodory可测集},简称$\mu_*$-可测集.
+		则称$A$是关于$\mu_*$的\textbf{Caratheodory可测集},简称$\mu_*$-可测集.
 	\end{definition}
 	
 	\begin{theorem}[从预测度构造外测度]
@@ -858,7 +858,7 @@
 		设$\mu$为$\mathcal{M}$上的测度.若零测集的子集均可测,即对任意$\mu(E)=0$,如果$F\subset E$,那么$F\in\mathcal{M}$,则称$\mu$是\textbf{完备测度}.
 	\end{definition}
 	\begin{corollary}
-		设$\mu$为$\mathcal{M}$上的测读,则它满足:
+		设$\mu$为$\mathcal{M}$上的测度,则它满足:
 		\begin{enumerate}
 			\item (单调性)若$E,F\in\mathcal{M}$,$E\subset F$,则$\mu_*(E)\le \mu_*(F)$.
 			\item (可数次可加性)若$E_j\in\mathcal{M}$,则
