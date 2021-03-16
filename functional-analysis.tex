@@ -1,0 +1,1159 @@
+\documentclass{ctexart}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{enumitem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{定义}
+\newtheorem{lemma}{引理}
+\newtheorem{theorem}{定理}
+\newtheorem{example}{例}
+\newtheorem{corollary}{推论}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+
+\newenvironment{proofsketch}{
+  \renewcommand{\proofname}{证明概要}\proof}{\endproof}
+
+\newcommand\lemmaref[1]{\textbf{引理\ref{#1}}}
+\newcommand\thmref[1]{\textbf{定理\ref{#1}}}
+\newcommand\cororef[1]{\textbf{推论\ref{#1}}}
+
+\title{泛函分析}
+\author{}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{空间的一般理论}
+	
+	\subsection{度量空间}
+	
+	\begin{definition}
+		设$X$为非空集合,$d:X\times X\to\mathbb{R}$,且满足:
+		\begin{enumerate}
+			\item $d(x,y)\ge 0$,且$d(x,y)=0$当且仅当$x=y$;
+			\item $d(x,y)=d(y,x)$;
+			\item $d(x,z)\le d(x,y)+d(y,z)$.
+		\end{enumerate}
+		则称$(X,d)$为\textbf{度量空间},$d$是其上的度量.
+	\end{definition}
+	
+	在度量空间上,我们可以定义其拓扑.
+	
+	\begin{definition}
+		设$(X,d)$是度量空间,$x\in X$,$r>0$,则$B(x,r)=\{y\mid d(x,y)<r\}$为$X$中的开球;$\overline{B}(x,r)=\{y\mid d(x,y)\le r\}$为$X$中的闭球.
+		
+		设$O\subset X$,若对任意$x\in O$,存在$r>0$使得$B(x,r)\subset O$,则称$O$是$X$上的开集.若$F\subset X$且$F^c$是开集,则称$F$是$X$上的闭集.
+		
+		若$M\subset X$,包含$M$的最小闭集称为$M$的闭包,记作$\overline{M}$.如果$\overline{M}=X$,则称$M$在$X$中稠密.有可数稠密子集的度量空间称为\textbf{可分空间}.
+	\end{definition}
+	
+	\begin{definition}
+		设$(X,d)$是度量空间,$x\in X$,$\{x_n\}$是$X$中点列.若$d(x_n,x)\to 0\;(n\to\infty)$,则称$x_n$\textbf{收敛}到$x$,记作$x_n\to x\;(n\to\infty)$.
+		
+		若$d(x_n,x_m)\to 0(n,m\to\infty)$,则称$x_n$是$X$中\textbf{Cauchy列}.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 度量空间中的收敛列必为Cauchy列.
+			\item 度量空间中的Cauchy列若有收敛子列,则它必收敛.
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{definition}
+		设$(X,d)$是度量空间.若$X$中任一Cauchy列都收敛,则称$X$是完备度量空间.
+	\end{definition}
+	\begin{theorem}[Banach不动点定理]
+		设$(X,d)$是完备度量空间,若$T:X\to X$是其上的压缩映射,即存在$\alpha<1$使得对任意$x,y\in X$,$d(Tx,Ty)\le\alpha d(x,y)$,则$T$存在唯一不动点.
+	\end{theorem}
+	\begin{proof}
+		唯一性显然,下证存在性.
+		
+		任取$x_0\in X$,令$x_n=Tx_{n-1}\;(n\ge 1)$,得到点列$\{x_n\}$,则此时有$d(x_{n+1},x_n)\le\alpha d(x_n,x_{n-1})$,进而
+		\begin{align*}
+			d(x_{n+p},x_n) & \le\sum_{k=1}^p{d(x_{n+k},x_{n+k-1})}\le\sum_{k=1}^p{\alpha^{n+k-1}d(x_1,x_0)} \\
+			& \le\frac{\alpha^n}{1-\alpha}d(x_1,x_0)\to 0.\quad(n\to\infty,\mbox{对}p\mbox{一致})
+		\end{align*}
+		
+		所以$\{x_n\}$是Cauchy列,从而存在收敛点$x$,此时由$x_n=Tx_{n-1}$即得$Tx=x$.
+	\end{proof}
+	
+	接下来考察完备化的概念.
+	\begin{definition}
+		设$(X,d)$,$(Y,\rho)$是两个度量空间,$\varphi:X\to Y$为双射,且满足$d(x,y)=\rho(\varphi x,\varphi y)$,则称$X$与$Y$\textbf{等距同构}.若$\varphi$是单射(其他条件不变),则称$X$\textbf{等距嵌入}$Y$.
+	\end{definition}
+	\begin{remark}
+		等距同构时我们往往把$X$和$Y$当作等同来看待.
+	\end{remark}
+	\begin{definition}
+		设$X$等距嵌入完备度量空间$Y$,且对任意完备度量空间$Z$,如果$X$等距嵌入$Z$,那么$Y$可以等距嵌入$Z$,则称$Y$是$X$的\textbf{完备化空间},记作$\overline{X}$.
+	\end{definition}
+	\begin{lemma}\label{complete-lemma}
+		若$X$等距嵌入$Y$,$Y$完备,且$X$在$Y$中稠密(即对任意$y\in Y$及$\varepsilon>0$,总存在$x\in X$使得$d(x,y)<\varepsilon$),则$Y$是$X$的完备化空间.
+	\end{lemma}
+	\begin{theorem}[完备化空间的存在性]
+		对任意度量空间$X$,其完备化空间$\overline{X}$总存在.
+	\end{theorem}
+	\begin{proofsketch}
+		取$Y$为$X$上全体基本列之集,在其上定义
+		$$\{x_n\}\sim\{\tilde{x}_n\}\Leftrightarrow d(x_n,\tilde{x}_n)\to 0\;(n\to\infty)$$
+		,则$~$是等价关系,取商集$\overline{X}=Y/\sim$,验证 \lemmaref{complete-lemma}即可.
+	\end{proofsketch}
+	
+	接下来讨论紧和列紧性的概念.
+	\begin{definition}
+		设$X$是度量空间,$M\subset X$.若$M$中任意点列都有收敛子列,则称$M$是$X$中的\textbf{列紧集}.若$M$中任意点列都有子列在$M$自身收敛,则称$M$是\textbf{自列紧集}.
+	\end{definition}
+	\begin{definition}
+		设$X$是度量空间,$M\subset X$.若集合$N\subset M$满足对任意$x\in M$,总存在$y\in N$使得$d(x,y)<\varepsilon$,则称$N$是集合$M$的\textbf{$\varepsilon$-网}.
+		
+		若对任意$\varepsilon>0$,总存在$M$的有穷$\varepsilon$-网,则称$M$\textbf{完全有界}.
+	\end{definition}
+	\begin{theorem}[Hausdorff定理]
+		列紧集一定是完全有界集.在完备空间中,完全有界集一定是列紧集.
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 设$M$是列紧集.反证,假设$M$不是完全有界的,即存在$\varepsilon_0$使得$M$没有有穷$\varepsilon_0$-网.
+			此时任取$x_1\in M$,则一定存在$x_2\in M$,使得$d(x_1,x_2)\ge\varepsilon_0$.同样地,一定存在$x_3\in M$,使得$d(x_1,x_3)\ge\varepsilon_0$且$d(x_2,x_3)\ge\varepsilon_0$.
+			一直取下去,得到$M$中点列$\{x_n\}$,满足$d(x_n,x_m)\ge\varepsilon_0\;(n\ne m)$,它不可能有收敛子列,矛盾.
+			
+			\item 设$M$是完全有界集,并设$\{x_n\}$为$M$中点列.
+			由于$M$有有穷$1$-网,一定存在球$B(y_1,1)$包含了$\{x_n\}$的子列$\{x_n^{(1)}\}$.
+			同理,存在球$B(y_2,\frac{1}{2})$包含$\{x_n^{(1)}\}$的子列$\{x_n^{(2)}\}$.
+			一直做下去,再取对角线子列$\{x_k^{(k)}\}$,则此时有
+			$$d(x_{n+p}^{(n+p)},x_n^{(n)})\le d(x_{n+p}^{(n+p)},y_n)+d(x_n^{(n)},y_n)\le\frac{2}{n}\to 0\quad(n\to\infty)$$
+			从而$\{x_n^{(n)}\}$是Cauchy列,进而是$\{x_n\}$的收敛子列.
+		\end{enumerate}
+	\end{proof}
+	\begin{definition}
+		设$M$是度量空间$X$的子集,若对$M$的任意开覆盖$M\subset\bigcup_{\alpha}{O_\alpha}$,都有有限子覆盖$M\subset\bigcup_{k=1}^n{O_k}$,则称$M$是\textbf{紧集}.
+	\end{definition}
+	\begin{theorem}
+		紧集等价于自列紧集.
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 设$M$是紧集.我们首先证明$M$是闭集:对任意$x_0\notin M$,开覆盖$M\subset\bigcup_{x\in M}{B(x,\frac{1}{2}d(x,x_0))}$必有有限子覆盖$M\subset \bigcup_{k=1}^n{B(x_k,\frac{1}{2}d(x_k,x_0))}$,此时有$B(x,\frac{1}{2}\min_k{d(x_k,x_0)})\subset M^c$,从而$M$是闭集.
+			
+			再证明$M$是列紧集.反证,假设$M$上存在点列$\{x_n\}$无收敛子列,不妨设$x_n$互补相同,则有开覆盖$M\subset\bigcup_{n=1}^\infty{(X-\{x_1,\cdots,x_{n-1},x_{n+1},\cdots\})}$,它有有限子覆盖,进而得到$M\subset X-\{x_{N+1},x_{N+2},\cdots\}$,矛盾.
+			
+			\item 设$M$是自列紧集.反证,假设$M$存在开覆盖$M\subset\bigcup_{\alpha}{O_\alpha}$没有有限子覆盖.对任意$n$,由Hausdorff定理$M$有有穷$\frac{1	}{n}$-网,从而存在$B(y_n,\frac{1}{n})$不能被$\bigcup_\alpha{O_\alpha}$有限覆盖.
+			由列紧性,$y_n$有收敛子列$y_{n_k}\to y_0$.此时存在某个$O_{\alpha_0}\ni y_0$,进而$B(y_0,\delta)\subset O_{\alpha_0}$.
+			
+			当$k$充分大时,有
+			$$B(y_{n_k},\frac{1}{n_k})\subset B(y_0,\delta)\subset O_{\alpha_0},$$
+			矛盾.
+		\end{enumerate}
+	\end{proof}
+	
+	最后我们将列紧性应用到连续函数空间上.
+	\begin{definition}
+		设$X$是紧度量空间,$F$为一族$X$上的连续函数,若存在$M>0$使得对任意$x\in X,\varphi\in F$,都有$|\varphi(x)|\le M$,则称$F$\textbf{一致有界}.
+	\end{definition}
+	\begin{definition}
+		设$X$是紧度量空间,$F$为一族$X$上的连续函数,若对任意$\varepsilon>0$,存在$\delta>0$,使得对任意$x,y\in X$及$\varphi\in F$,只要$d(x,y)<\delta$,那么就有$|\varphi(x)-\varphi(y)|<\varepsilon$,则称$F$\textbf{等度连续}.
+	\end{definition}
+	\begin{theorem}[Arzela-Ascoli定理]
+		设$X$是紧度量空间,$C(X)$为$X$上的连续函数空间,$F\subset C(X)$.在$C(X)$上定义度量
+		$$d(\varphi,\psi)=\sup_{x\in X}{|\varphi(x)-\psi(x)|},$$
+		则$F$是$C(X)$上的列紧集当且仅当$F$一致有界且等度连续.
+	\end{theorem}
+	\begin{proof}
+		\textit{充分性.}列紧集一定有界,即$F$一致有界.对任意$\varepsilon>0$,$F$有有穷$\frac{\varepsilon}{3}$-网$N=\{\varphi_1,\cdots,\varphi_n\}$,由连续性可知存在$\delta>0$使得$d(x,y)<\delta\Rightarrow|\varphi_k(x)-\varphi_k(y)|<\frac{\varepsilon}{3}$,从而对任意$d(x,y)<\delta$及$\varphi\in F$,有
+		$$|\varphi(x)-\varphi(y)|<|\varphi(x)-\varphi_k(x)|+|\varphi_k(x)-\varphi_k(y)|+|\varphi(y)-\varphi_k(y)|<\varepsilon.$$
+		故$F$等度连续.
+		
+		\textit{必要性.}由等度连续性,对任意$\varepsilon>0$,存在$\delta>0$使得$d(x,y)<\delta\Rightarrow|\varphi(x)-\varphi(y)|<\frac{\varepsilon}{3}$.
+		由于$M$是紧集,取$M$的有穷$\delta$-网$N=\{x_1,\cdots,x_n\}$,并令$$T:F\to\mathbb{R}^n,T(\varphi)=(\varphi(x_1),\cdots,\varphi(x_n)).$$
+		
+		在$\mathbb{R}^n$上取$d(\mathbf{x},\mathbf{y})=\max_k|x_k-y_k|$.
+		由一致有界性$T(F)$在$\mathbb{R}^n$上有界,从而是列紧集,存在有穷$\frac{\varepsilon}{3}$-网$\tilde{N}=\{T\varphi_1,\cdots,T\varphi_n\}$.此时对任意$\varphi\in F$,存在$\varphi_k$使得$|T\varphi-T\varphi_k|<\frac{\varepsilon}{3}$.进而对任意$x\in X$,有
+		$$|\varphi(x)-\varphi_k(x)|<|\varphi(x)-\varphi(x_i)|+|\varphi(x_i)-\varphi_k(x_i)|+|\varphi_k(x_i)-\varphi(x_i)|<\varepsilon,$$
+		从而$d(\varphi,\varphi_k)<\varepsilon$,故$F$列紧.
+	\end{proof}
+	
+	\subsection{线性赋范空间}
+	
+	\begin{definition}
+		设数域$\mathbb{K}=\mathbb{R}\mbox{或}\mathbb{C}$,$X$是$\mathbb{K}$上的线性空间,$\|\cdot\|:X\to\mathbb{R}$满足:
+		\begin{enumerate}
+			\item $\|x\|\ge 0$,且$\|x\|=0$当且仅当$x=0$;
+			\item $\|x+y\|\le\|x\|+\|y\|$;
+			\item $\|\alpha x\|=|\alpha|\cdot\|x\|(\alpha\in\mathbb{K})$.
+		\end{enumerate}
+		则称$(X,\|\cdot\|)$是一个\textbf{线性赋范空间},$\|\cdot\|$是其上的\textbf{范数}.
+	\end{definition}
+	\begin{corollary}
+		设$(X,\|\cdot\|)$是赋范空间,在其上定义度量$d(x,y)=\|x-y\|$,则$(X,d)$成为度量空间.此时的$d$也称作由$\|\cdot\|$诱导的度量.
+	\end{corollary}
+	\begin{definition}
+		设$X$是赋范空间,如果其诱导的度量是完备的,则称$X$是\textbf{Banach空间}(完备赋范空间).
+	\end{definition}
+	
+	\begin{definition}
+		设$\|\cdot\|_1$,$\|\cdot\|_2$分别为$X$上的两个范数,如果存在$C\ge 0$,使得对任意$x\in X$,$\|x\|_1\le C\|x\|_2$,则称范数$\|\cdot\|_2$比$\|\cdot\|_1$\textbf{强}.如果$\|\cdot\|_1$,$\|\cdot\|_2$互相比对方强,则称这两个范数\textbf{等价}.
+	\end{definition}
+	\begin{corollary}
+		有穷维线性空间上的范数互相等价.
+	\end{corollary}
+	\begin{theorem}
+		设$X$是线性赋范空间,$X_0$是其有限维线性子空间,$y\in X$,则$y$到$X_0$的最佳逼近元(即使得$d(x,y)$最小的$x\in X_0$)必存在.
+	\end{theorem}
+	\begin{proofsketch}
+		设$\{e_1,\cdots,e_n\}$是$X_0$的一组基,则最佳逼近元等价于函数
+		$$f(\alpha_1,\cdots,\alpha_n)=\|y-\alpha_1e_1-\cdots-\alpha_ne_n\|$$
+		的最小值点.
+		
+		易证$f$是下凸函数,且在$\alpha\to\infty$时$f\to\infty$,从而$f$的最小值点存在.
+	\end{proofsketch}
+	\begin{lemma}[Riesz引理]
+		设$X$为线性赋范空间,$X_0$是$X$的真闭子空间,则对任意$\varepsilon<1$,存在$y\in X$使得$\|y\|=1$,并且$d(y,X_0)=\inf_{x\in X_0}{d(y,x)}\ge 1-\varepsilon$.
+	\end{lemma}
+	\begin{proof}
+		由于$X_0$是真子空间,任取$y_0\notin X_0$,并设$d=d(y_0,X_0)$.由闭性可知$d>0$.
+		
+		由下确界性质可知,存在$x_0\in X_0$使得$\|y_0-x_0\|\le\frac{d}{1-\varepsilon}$,令$y=\frac{y_0-x_0}{\|y_0-x_0\|}$即得.
+	\end{proof}
+	\begin{theorem}
+		线性赋范空间是有限维的当且仅当其单位球列紧.
+	\end{theorem}
+	\begin{proof}
+		充分性显然.下证必要性.
+		
+		设$X$的单位球$B$列紧,反证,假设$X$是无穷维的.此时任取$x_1\in B$,由Riesz引理可知存在$x_2\in B$使得$d(x_2,\mathrm{span}\{x_1\})\ge\frac{1}{2}$.
+		同样地,存在$x_3\in B$使得$d(x_3,\mathrm{span}\{x_1,x_2\})\ge\frac{1}{2}$.
+		
+		继续做下去,得到$B$上点列$\{x_n\}$,满足$d(x_n,x_m)\ge\frac{1}{2}\;(n\ne m)$,它不存在收敛子列,矛盾.
+	\end{proof}
+	
+	下面考察商空间的概念.
+	\begin{definition}
+		设$X$是赋范空间,$X_0$是$X$的闭子空间,在$X$上定义$x\sim y\Leftrightarrow x-y\in X_0$,则$\sim$为$X$上等价关系,其商集为\textbf{商空间}$X/X_0$.
+		
+		在$X/X_0$上定义范数$\|[x]\|_0=\inf_{y\in[x]}{\|y\|}$,则$(X/X_0,\|\cdot\|_0)$为线性赋范空间.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item $\|[x]\|_0=d(x,X_0)$;
+			\item 对任意$[x]\in X/X_0$,存在$x'\in X$使得$[x']=[x]$,并且$\|x'\|\le 2\|[x]\|_0$;
+			\item 若$X$完备,则$X/X_0$也完备.
+		\end{enumerate}
+	\end{corollary}
+	
+	下面讨论赋范空间上的凸集,并给出一个凸集上的不动点定理.
+	\begin{definition}
+		设$X$是线性空间,$E\subset X$,若对任意$x,y\in E$及$0\le\lambda\le 1$,$\lambda x+(1-\lambda)y\in E$,则称$E$是一个\textbf{凸集}.
+		
+		设$A\subset X$,包含$A$的最小凸集称为$A$的\textbf{闭包},记作$\mathrm{co}(A)$.
+	\end{definition}
+	\begin{corollary}
+		设$X$是线性空间,$A\subset X$,则
+		$$\mathrm{co}(A)=\left\{\sum_{i=1}^n{\lambda_ix_i}\middle|x_i\in A,0\le\lambda_i\le 1,\sum_{i=1}^n{\lambda_i}=1\right\}.$$
+	\end{corollary}
+	\begin{definition}
+		设$X$是线性空间,$C$是包含$0$的凸子集,$X$上泛函
+		$$P(x)=\inf\left\{\lambda>0\middle|\frac{x}{\lambda}\in C\right\}$$
+		称为$C$的\textbf{Minkowski泛函}.
+	\end{definition}
+	\begin{corollary}
+		设$P(x)$是$C$的Minkowski泛函,则:
+		\begin{enumerate}
+			\item $P(x)\in[0,+\infty]$;
+			\item $P(0)=0$;
+			\item (\textit{正齐次性})$P(\lambda x)=\lambda P(x)\quad(\lambda>0)$;
+			\item (\textit{次可加性})$P(x+y)\le P(x)+P(y)$.
+		\end{enumerate}
+	\end{corollary}
+	\begin{corollary}
+		设$X$是赋范空间,若$C$是其闭凸子集,则$P(x)$下半连续,且$C=\{x\mid P(x)\le 1\}$.
+	\end{corollary}
+	\begin{theorem}
+		若$C$是$\mathbb{R}^n$的紧凸子集,则$C$同胚于$\mathbb{R}^m(m\le n)$上的单位球.
+	\end{theorem}
+	\begin{lemma}
+		设$C$是$\mathbb{R}^n$上的紧凸子集,$T:C\to C$连续,则$T$必有$C$上的不动点.
+	\end{lemma}
+	\begin{theorem}[Schauder不动点定理]
+		设$C$是赋范空间中的闭凸子集,$T:C\to C$连续,且$T(C)$是列紧集,则$T$必有$C$上的不动点.
+	\end{theorem}
+	\begin{proofsketch}
+		由$T(C)$列紧,它有$\frac{1}{n}$-网$N_n$,从而可以作映射
+		$$I_n:T(C)\to\mathrm{co}(N_n),I_n(y)=\sum_{i=1}^n\frac{y_im_i(y)}{\sum_{j=1}^n{m_j(y)}},$$
+		其中
+		\begin{equation*}
+			m_i(y)=
+			\begin{cases}
+				1-n\|y-y_i\|, & y\in B(y_i,\frac{1}{n}) \\
+				0. & y\notin B(y_i,\frac{1}{n}) \\
+			\end{cases}
+		\end{equation*}
+		
+		此时$\|I_ny-y\|\le\frac{1}{n}$.又由$\mathrm{co}(N_n)\subset C$,得到映射$T_n:\mathrm{co}(N_n)\to\mathrm{co}(N_n),T_n=I_n\circ T$.此时$T_n$有不动点$x_n$,从而$\{Tx_n\}$有收敛子列$Tx_{n_k}\to x$.利用上面的性质可以得到
+		\begin{align*}
+			\|x_n-x\| & =\|T_nx_n-x\| \\
+			& \le \|I_n(Tx_n)-Tx_n\|+\|Tx_n-x\| \\
+			& < \frac{1}{n}+\|Tx_n-x\|
+		\end{align*}
+		于是$x_{n_k}\to x$,得到$Tx=x$.
+	\end{proofsketch}
+	
+	\subsection{内积空间}
+	
+	\begin{definition}
+		设$\mathbb{K}=\mathbb{R}\mbox{或}\mathbb{C}$,$X$是$\mathbb{K}$上的线性空间,其上的双线性函数$(\cdot,\cdot):X\times X\to\mathbb{K}$满足:
+		\begin{enumerate}
+			\item $(x,y)=\overline{(y,x)}$;
+			\item $(x,x)\ge 0$,并且$(x,x)=0$当且仅当$x=0$.
+		\end{enumerate}
+		则$(X,(\cdot,\cdot))$称为\textbf{内积空间},$(\cdot,\cdot)$为其上的内积.
+	\end{definition}
+	\begin{definition}
+		设$(X,(\cdot,\cdot))$,则$\|x\|=(x,x)^\frac{1}{2}$称为由此内积诱导的范数.
+		
+		如果$X$关于诱导的范数是Banach空间,则称$X$是\textbf{Hilbert空间}(完备内积空间).
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item (\textit{Cauchy-Schwarz不等式})$|(x,y)|\le\|x\|\cdot\|y\|$;
+			\item 内积关于其诱导的范数是连续函数;
+			\item 赋范空间上的范数可以由某个内积诱导当且仅当满足平行四边形等式$\|x+y\|^2+\|x-y\|^2=2(\|x\|^2+\|y\|^2)$.
+		\end{enumerate}
+	\end{corollary}
+	
+	下面讨论内积空间中正交的概念,以及正交规范集的性质.
+	\begin{definition}
+		设$X$是内积空间,$x,y\in X$.若$(x,y)=0$,则称$x$与$y$正交,记作$x\perp y$.
+		设$M\subset X$,若对任意$y\in M$,$x\perp y$,则称$x$与$M$正交,记作$x\perp M$.
+		集合$M^\perp=\{x\mid x\perp M\}$称为$M$的\textbf{正交补}.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 正交具有线性性;
+			\item 若$x=y+z$且$y\perp z$,则$\|x\|^2=\|y\|^2+\|z\|^2$;
+			\item 若$x\perp y_n$且$y_n\to y\;(n\to\infty)$,则$x\perp y$;
+			\item 设$M\subset X$,则$M^\perp$是$X$的闭线性子空间.
+		\end{enumerate}
+	\end{corollary}
+	\begin{definition}
+		设$X$是内积空间,$S=\{e_\alpha\}\subset X$,若对任意$e_\alpha,e_\beta\in S$,$e_\alpha\ne e_\beta$,都有$e_\alpha\perp e_\beta$,则称$S$是\textbf{正交集}.
+		
+		若正交集$S$满足对任意$e_\alpha\in S$都有$\|e_\alpha\|=1$,则称$S$是\textbf{正交规范集}.
+	\end{definition}
+	\begin{theorem}[Bessel不等式]
+		设$X$是内积空间,$S=\{e_\alpha\}_{\alpha\in A}$为正交规范集,$x\in X$,则
+		$$\sum_{\alpha\in A}{|(x,e_\alpha)|^2}\le\|x\|^2$$
+		且其中左侧的求和是可数和.
+	\end{theorem}
+	\begin{proof}
+		对$S$的任一有限子集$\{e_1,\cdots,e_n\}\subset S$,有
+		$$\left\|x-\sum_{i=1}^n{(x,e_i)e_i}\right\|^2
+		=\|x\|^2-\sum_{i=1}^n{|(x,e_i)|^2}\ge 0,$$
+		
+		所以对每个$n$,使得$|(x,e_\alpha)|>\frac{1}{n}$的$\alpha$有限,进而使得$|(x,e_\alpha)|>0$的$\alpha$至多可数.
+		设这样的全体$e_\alpha$为$\{e_1,e_2,\cdots\}$,再对上式取$n\to\infty$即得.
+	\end{proof}
+	\begin{corollary}\label{corollary-orthonormal}
+		设$X$是Hilbert空间,$S=\{e_\alpha\}_{\alpha\in A}$为正交规范集,$x\in X$,那么$\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}\in X$,且此时
+		$$\left\|x-\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}\right\|^2=\|x\|^2-\sum_{\alpha\in A}{|(x,e_\alpha)|^2}.$$
+	\end{corollary}
+	\begin{proof}
+		设使得$\|(x,e_\alpha)|>0$的全体$e_\alpha$为$\{e_1,e_2,\cdots\}$.
+		
+		记$x_n=\sum_{i=1}^n{(x,e_i)e_i}$,根据Bessel不等式,级数$\sum_{n=1}^\infty{|(x,e_n)|^2}$收敛,因而有
+		$$\left\|\sum_{i=n}^{n+p}{(x,e_i)e_i}\right\|^2=\sum_{i=n}^{n+p}{|(x,e_i)|^2}\to 0\quad(n\to\infty,\mbox{对}p\mbox{一致})$$
+		
+		于是$\{x_n\}$是Cauchy列,从而极限$x_0=\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}\in X$存在.
+		此时又有$x_0\perp x-x_0$,从而
+		$$\|x-x_0\|^2=\|x\|^2-\|x_0\|^2=\|x\|^2-\sum_{\alpha\in A}{|(x,e_\alpha)|^2}.$$
+	\end{proof}
+	\begin{theorem}
+		设$X$是Hilbert空间,$S=\{e_\alpha\}_{\alpha\in A}$是正交规范集,则以下条件等价:
+		\begin{enumerate}
+			\item 对任意$x\in X$,$x=\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}$成立;
+			\item $S^\perp=\{0\}$;
+			\item 对任意$x\in X$,Parseval等式
+			$$\|x\|^2=\sum_{\alpha\in A}{|(x,e_\alpha)|^2}$$
+			成立.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		1$\Rightarrow$2. 若$x\perp S$,则$(x,e_\alpha)=0$,从而由条件1,$x=0$.
+		
+		2$\Rightarrow$3. 若对某个$x\in X$,Parseval等式不成立,此时由\cororef{corollary-orthonormal}可知
+		$$\left\|x-\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}\right\|^2=\|x\|^2-\sum_{\alpha\in A}{|(x,e_\alpha)|^2}>0,$$
+		此时取$y=x-\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}$则$y\in S^\perp$,矛盾.
+		
+		3$\Rightarrow$1. 对任意$x\in X$,利用Parseval等式及\cororef{corollary-orthonormal}即得
+		$$\left\|x-\sum_{\alpha\in A}{(x,e_\alpha)e_\alpha}\right\|=0.$$
+	\end{proof}
+	\begin{remark}
+		\begin{enumerate}
+			\item 上述条件成立时,$S$也称为$X$的一组\textbf{正交规范基}.
+			\item 利用Zorn引理,可以证明任何(非零)内积空间的正交规范基必存在.
+		\end{enumerate}
+	\end{remark}
+	
+	下面讨论Hilbert空间中的最佳逼近元,从而引出正交分解.
+	\begin{theorem}[最佳逼近元的存在唯一性]
+		设$X$是Hilbert空间,$C$是其闭凸子集,$y\in X$,则$y$到$C$的最佳逼近元必存在且唯一.
+	\end{theorem}
+	\begin{proof}
+		\textit{存在性.}不妨设$y\notin X$,记$d=d(y,C)>0$.由下确界定义,对每个$n$,存在$x_n\in C$使得$d\le\|y-x_n\|\le d+\frac{1}{n}$.
+		
+		利用平行四边形等式,有
+		\begin{align*}
+			\|x_m-x_n\|^2 & = 2(\|x_m\|^2+\|x_n\|^2)-4\left\|\frac{x_m+x_n}{2}\right\|^2 \\
+			& \le 2\left[\left(d+\frac{1}{n}\right)^2+\left(d+\frac{1}{m}\right)^2\right]-4d^2\to 0\quad(n,m\to\infty)
+		\end{align*}
+		
+		故$\{x_n\}$是Cauchy列,从而有极限$x\in C$,此时$x$即为最佳逼近元.
+		
+		\textit{唯一性.}若$x_1,x_2$均为最佳逼近元,则
+		$$\|x_1-x_2\|^2=2(\|x_1\|^2+\|x_2\|^2)-4\left\|\frac{x_1+x_2}{2}\right\|^2\le 4d^2-4d^2=0.$$
+	\end{proof}
+	\begin{theorem}[最佳逼近元的刻画]
+		\hspace*{\fill}
+		\begin{enumerate}
+			\item 设$C$是Hilbert空间$X$的闭凸子集,$y\in X$,则$x_0\in C$最佳逼近$y$当且仅当对任意$x\in C$,$\mathrm{Re}(y-x_0,x_0-x)\ge 0$;
+			\item 设$M$是Hilbert空间$X$的闭线性子空间,$y\in X$,则$x\in C$最佳逼近$y$当且仅当$x-y\perp M$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proofsketch}
+		\begin{enumerate}
+			\item 对任意$x\in C$,令函数
+			$$\phi(t)=\|y-tx-(1-t)x_0\|^2\quad(0\le t\le 1)$$
+			则$x_0$最佳逼近$y$当且仅当$\phi(t)$在$0$处取到最小值.
+			
+			注意到
+			\begin{align*}
+				\phi(t) & = \|(y-x_0)+t(x_0-x)\|^2 \\
+				& = \|y-x_0\|^2+2t\mathrm{Re}(y-x_0,x_0-x)+t^2\|x_0-x\|^2
+			\end{align*}
+			所以$\phi(t)$在$0$处最小当且仅当$\phi'(0)=2Re(y-x_0,x_0-x)\ge 0$.
+			
+			\item 利用1即得.
+		\end{enumerate}
+	\end{proofsketch}
+	\begin{corollary}[正交分解]
+		设$X$是Hilbert空间,$M$是闭线性子空间,$x\in X$,那么存在惟一的$y\in M,z\in M^\perp$,使得$x=y+z$.
+	\end{corollary}
+	\begin{remark}
+		我们称由上述推论得到的$y$为$x$在$M$上的\textbf{正交投影}.
+	\end{remark}
+	
+	\subsection{赋范空间上的线性算子}
+	
+	\begin{definition}
+		设$X,Y$为线性空间,$T:X\to Y$满足$T(\alpha x+\beta y)=\alpha Tx+\beta Ty(x,y\in X,\alpha,\beta\in\mathbb{K})$,则称$T$为\textbf{线性算子}.
+	\end{definition}
+	\begin{remark}
+		设$X,Y$为线性空间,$X_0$为$X$的线性子空间,$T:X_0\to Y$为线性算子,有时也说$T$是$X$到$Y$上的线性算子,其定义域为$\mathrm{dom}T=X_0$.
+	\end{remark}
+	\begin{definition}
+		设$X,Y$为赋范空间,$T:X\to Y$为线性算子.如果$x_n\to x$蕴含$Tx_n\to Tx$,则称$T$\textbf{连续};如果存在$M\ge 0$使得$\|Tx\|_Y\le M\|x\|_X$,则称$T$\textbf{有界}.全体$X$到$Y$的有界线性算子记为$L(X,Y)$.
+	\end{definition}
+	\begin{corollary}
+		赋范空间中,线性算子的连续性等价于有界性.
+	\end{corollary}
+	\begin{definition}[算子的范数]
+		设$X,Y$是赋范空间,$T\in L(X,Y)$,定义算子$T$的范数
+		$$\|T\|=\sup_{x\ne 0}\frac{\|Tx\|}{\|x\|}=\sup_{\|x\|=1}{\|Tx\|}$$
+		此时$L(X,Y)$成为赋范空间.
+		
+		若$Y=\mathbb{K}$,则称$T$为$X$上的泛函,$L(X,\mathbb{K})$称为$X$的\textbf{对偶空间},记作$X^*$.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 若$Y$是Banach空间,则$L(X,Y)$也是Banach空间.
+			\item 若$X,Y$均为有限维的,则$X$到$Y$的线性算子一定连续.
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[Riesz表示定理]
+		设$X$是Hilbert空间,$f\in X^*$,则存在唯一的$y\in X$,使得$f(x)=(x,y)\;(x\in X)$成立.
+	\end{theorem}
+	\begin{proof}
+		唯一性显然.下证存在性.
+		
+		不妨设$f\ne 0$.记$M=\{x\in X\mid f(x)=0\}$,则由正交分解定理,存在$x_0\perp M$,不妨设$\|x_0\|=1$.
+		
+		对任意$x\in X$,令$\alpha=\frac{f(x)}{f(x_0)}$,$z=x-\alpha x_0$,此时
+		$$f(z)=f\left(x-\frac{f(x)}{f(x_0)}x_0\right)=0,$$
+		即$z\in M$,因而$y\perp z$.
+		
+		令$y=\overline{f(x_0)}x_0$,则
+		$$(x,y)=(\alpha x_0+z,y)=\frac{f(x)}{f(x_0)}\cdot f(x_0)\|x_0\|^2=f(x).$$
+	\end{proof}
+	
+	\newpage
+	
+	\section{Baire纲定理及其应用}
+	
+	\subsection{Baire纲定理}
+	
+	\begin{definition}
+		设$X$为度量空间,$E\subset X$,若$E$的闭包$\overline{E}$无内点,则称$E$是\textbf{疏集}.
+	\end{definition}
+	\begin{theorem}
+		$E$是疏集当且仅当对任意球$B(x_0,r_0)$,存在子球$B(x_1,r_1)\subset B(x_0,r_0)$使得$\overline{E}\cap\overline{B}(x_1,r_1)=\emptyset$.
+	\end{theorem}
+	\begin{proof}
+		\textit{充分性.}设$E$是疏集.对任意球$B(x_0,r_0)$,因为$x_0$不可能是$\overline{E}$的内点,所以存在$x_1\in B(x_0,r_0)$使得$x_1\notin\overline{E}$.
+		此时又因为$\overline{E}$闭,存在$r>0$使得$B(x_1,r)\cap\overline{E}=\emptyset$.取$r_1<\min\{r_0,r\}$即得.
+		
+		\textit{必要性.}若$\overline{E}$有内点$x_0$,此时存在球$B(x_0,r_0)\subset\overline{E}$.
+		根据条件,存在$B(x_1,r_1)\subset B(x_0,r_0)$使得$\overline{E}\cap\overline{B}(x_1,r_1)=\emptyset$,此时$B(x_1,r_1)\subset\overline{E}$,矛盾.
+	\end{proof}
+	
+	\begin{definition}
+		若$E$可表示为疏集的可数并,即$E=\bigcup_{n=1}^\infty{E_n}$,其中$E_n$为疏集,则称$E$为\textbf{第一纲集}.否则称$E$为\textbf{第二纲集}.
+	\end{definition}
+	\begin{theorem}[Baire纲定理]
+		完备度量空间$X$必是第二纲集.
+	\end{theorem}
+	\begin{proof}
+		假设$X$是第一纲集,即$X=\bigcup_{n=1}^\infty{E_n}$,且$E_n$是疏集.
+		
+		任取球$B(x_0,r_0)\subset X$,则由$E_1$疏可知存在$B(x_1,r_1)\subset B(x_0,r_0)$且$\overline{B}(x_1,r_1)\cap\overline{E}_1=\emptyset$.不妨设$r_1<1$.
+		
+		同理,由$E_2$疏,存在球$B(x_2,r_2)\subset B(x_1,r_1)$且$\overline{B}(x_2,r_2)\cap\overline{E}_2=\emptyset$.不妨设$r_2<\frac{1}{2}$.
+		
+		继续进行下去,得到一列球$B(x_0,r_0)\supset B(x_1,r_1)\supset B(x_2,r_2)\supset\cdots$满足$r_n<\frac{1}{n}$,且$\overline{B}(x_n,r_n)\cap\overline{E}_n=\emptyset$.
+		
+		此时由$d(x_{n+p},x_n)\le r_n<\frac{1}{n}\to 0$可知$\{x_n\}$是Cauchy列,从而$x_n\to x\in X$.
+		再在$d(x_{n+p},x_n)\le r_n$中令$p\to\infty$可得$d(x,x_n)\le r_n$,即$x\in\overline{B}(x_n,r_n)$.于是对每个$n$都有$x\notin\overline{E}_n$,与$x\in X=\bigcup_{n=1}^\infty{E_n}$矛盾.
+	\end{proof}
+	
+	\subsection{开映射和闭图像定理}
+	
+	\begin{definition}
+		设$T:X\to Y$是线性算子,若对任一开集$U\subset X$,$TU\subset Y$为开集,则称$T$为\textbf{开映射}.
+	\end{definition}
+	\begin{theorem}[开映射定理]
+		设$X,Y$为Banach空间,$T\in L(X,Y)$,且$T$是满射,则$T$是开映射.
+	\end{theorem}
+	\begin{proof}
+		1.首先证明存在$\delta>0$使得$B_Y(0,3\delta)\subset\overline{TB_X(0,1)}$.
+			
+		因为$T$满射,所以$Y=T(X)=\bigcup_{n=1}^\infty{TB_X(0,n)}$,由Baire纲定理知存在$n$使得$TB_X(0,n)$不是疏集,因而存在$B_Y(y,r)\subset\overline{TB_X(0,n)}$.
+			
+		注意到$\overline{TB_X(0,n)}$是对称凸集,取$\frac{B_Y(y,r)+B_Y(-y,r)}{2}=B_Y(0,r)$得到$B_Y(0,r)\subset\overline{TB_X(0,n)}$.
+			
+		再令$\delta=\frac{r}{3n}$即得.
+			
+		2.接下来证明$B_Y(0,\delta)\subset TB_X(0,1)$.
+		
+		任取$y_0\in B_Y(0,\delta)$,由$B_Y(0,\delta)\subset\overline{TB_X(0,\frac{1}{3})}$可知,存在$x_1\in B_X(0,\frac{1}{3})$使得$\|y_0-Tx_1\|<\frac{\delta}{3}$.
+		
+		此时$y_0-Tx_1\in B_Y(0,\frac{\delta}{3})$,再由$B_Y(0,\frac{\delta}{3})\subset\overline{TB_X(0,\frac{1}{9})}$可知存在$x_2\in B_X(0,\frac{1}{9})$使$\|y_0-Tx_1-Tx_2\|<\frac{\delta}{9}$.
+		
+		同理,一直取下去,得到$x_n\in B_X(0,\frac{1}{3^n})$,且$\|y_0-Tx_1-\cdots-Tx_n\|<\frac{\delta}{3^n}$.
+		令$x=\sum_{n=1}^\infty{x_n}\in X$,则$x\in B_X(0,1)$,且
+		$$\left\|y_0-T\left(\sum_{k=1}^n{x_k}\right)\right\|<\frac{\delta}{3^n}\to 0,$$
+		即知$Tx=y_0$,得证.
+		
+		3.最后证明$T$是开映射.
+		
+		设$U\subset X$是开集,要证$T(U)\subset Y$也是开集.
+		对任意$y\in T(U)$,有$y=Tx\;(x\in U)$,此时存在$B_X(x,r)\subset U$,从而
+		$$B_Y(y,\delta r)\subset TB_X(x,r)\subset Y.$$
+	\end{proof}
+	
+	\begin{theorem}[Banach逆算子定理]
+		设$X,Y$是Banach空间,$T\in L(X,Y)$是双射,则$T^{-1}\in L(Y,X)$.
+	\end{theorem}
+	\begin{proof}
+		由开映射定理的步骤2知$B_Y(0,1)\subset TB_X(0,\frac{1}{\delta})$,从而对任意$y\in Y$且$\|y\|<1$,存在$x=T^{-1}y\in B_X(0,\frac{1}{\delta})$.
+		
+		因而$\|T^{-1}y\|<\frac{1}{\delta}$,所以$T^{-1}\in L(X,Y)$且$\|T^{-1}\|\le\frac{1}{\delta}$.
+	\end{proof}
+	
+	\begin{theorem}[等价范数定理]
+		设$X$是线性空间,$\|\cdot\|_1$和$\|\cdot\|_2$是$X$上的两个完备范数.若$\|\cdot\|_2$比$\|\cdot\|_1$强,则$\|\cdot\|_2$与$\|\cdot\|_1$等价.
+	\end{theorem}
+	\begin{proof}
+		设$I:(X,\|\cdot\|_2)\to(X,\|\cdot\|_1),Ix=x$.
+		由于$\|\cdot\|_2$比$\|\cdot\|_1$强,所以$I$作为线性算子是有界的.
+		又因为$I$是双射,由Banach逆算子定理可知$I^{-1}$有界,所以$\|\cdot\|_1$比$\|\cdot\|_2$强,得证.
+	\end{proof}
+	
+	\begin{definition}
+		设$D\subset X$,$T:D\to Y$为线性算子.若对任意$x_n\in D$,$x\in X$,$y\in Y$,只要$x_n\to x$,$Tx_n\to y$,那么就有$x\in D$且$Tx=y$,那么称$T$为\textbf{闭算子}.
+	\end{definition}
+	\begin{remark}
+		在$X\times Y$上定义范数$\|(x,y)\|=\|x\|+\|y\|$,则$T$为闭算子等价于$T$的图像$G=\{(x,Tx)\mid x\in D\}$是闭的.
+	\end{remark}
+	\begin{theorem}[闭图像定理]
+		设$X,Y$是Banach空间,$T:D\to Y$是闭线性算子,且$D$是闭集,则$T$连续.
+	\end{theorem}
+	\begin{proof}
+		因为$D$闭,所以$(D,\|\cdot\|_X)$作为子空间构成Banach空间.
+		在其上定义范数$\|x\|_G=\|x\|_X+\|Tx\|_Y$,易知$\|\cdot\|_G$比$\|\cdot\|_X$强.
+		
+		设$x_n\in D$为关于范数$\|\cdot\|_G$的Cauchy列,则由$\|x_n-x_m\|_G\ge\|x_n-x_m\|_X$可知它也是关于范数$\|\cdot\|_X$的Cauchy列,因而存在$x_n\to x\in D$.
+		同理,$Tx_n$是关于$\|\cdot\|_Y$的Cauchy列,所以存在$Tx_n\to y\in Y$.
+		
+		由$T$闭可知$y=Tx$,因而$x_n$在范数$\|\cdot\|_G$下收敛于$x$,所以$\|\cdot\|_G$是完备范数.
+		再由等价范数定理可知$\|\cdot\|_G$比$\|\cdot\|_X$强,从而$T$连续.
+	\end{proof}
+	
+	\subsection{共鸣定理和Banach-Steinhaus定理}
+	
+	\begin{theorem}[共鸣定理]
+		设$X$是Banach空间,$Y$是赋范空间,$W\subset L(X,Y)$是一族线性算子.若对任意$x\in X$,$\sup_{A\in W}{\|Ax\|}<+\infty$,则$\sup_{A\in W}{\|A\|}<+\infty$.
+	\end{theorem}
+	\begin{proof}
+		在$X$上定义范数$\|x\|_W=\|x\|+\sup_{A\in W}{\|Ax\|}$,易知$\|\cdot\|_W$比$\|\cdot\|$强.
+		
+		设$x_n$是关于范数$\|\cdot\|_W$的Cauchy列,则由$\|x_n-x_m\|_W\ge\|x_n-x_m\|$知$x_n$是关于$\|\cdot\|$的Cauchy列,进而存在$x_n\to x\in X$.
+		又因为$\|Ax_n-Ax_m\|\le\|x_n-x_m\|_W\to 0(n,m\to\infty)$,因而$\|Ax_n-Ax\|\to 0(n\to\infty)$.
+		故$\|x_n-x\|_W\to 0(n\to\infty)$,所以$\|\cdot\|_W$是完备范数.
+		
+		由等价范数定理,存在$M\ge 0$使得$\|x\|_W\le M\|x\|$,所以$\sup_{A\in W}{\|Ax\|}\le M\|x\|$,即$\sup_{A\in W}{\|A\|}\le M<+\infty$.
+	\end{proof}
+	
+	\begin{theorem}[Banach-Steinhaus定理]
+		设$X$是Banach空间,$Y$是赋范空间,$M\subset X$是$X$的稠密子集.
+		
+		对任一列算子$A_n,A\in L(X,Y)$,条件$A_nx\to Ax$对任意$x\in X$成立当且仅当$\|A_n\|$有界,且$A_nx\to Ax$在$x\in M$上成立.
+	\end{theorem}
+	\begin{proof}
+		\textit{充分性.}设$A_nx\to Ax$对任意$x\in X$成立,由共鸣定理即知$\|A_n\|$有界,得证.
+		
+		\textit{必要性.}设$\|A_n\|\le M_0$.对任意$x\in X$及$\varepsilon>0$,由稠密性可以取$y\in M$,使得$\|x-y\|\le\frac{\varepsilon}{4(\|A\|+M_0)}$.
+		又因为$A_ny\to Ay$成立,所以当$n$充分大时$\|A_ny-Ay\|<\frac{\varepsilon}{2}$.
+		
+		此时就有
+		\begin{align*}
+			\|A_nx-Ax\| & \le(\|A\|+M_0)\|x-y\|+\|A_ny-Ay\| \\
+			& <\frac{\varepsilon}{2}+\|A_ny-Ay\|<\varepsilon
+		\end{align*}
+		所以$A_nx\to Ax$成立.
+	\end{proof}
+	
+	\newpage
+	
+	\section{Hahn-Banach定理及其应用}
+	
+	\subsection{Hahn-Banach定理}
+	
+	\begin{definition}
+		设$X$是实线性空间,$p:X\to\mathbb{R}$如果满足:
+		\begin{enumerate}
+			\item (\textit{正齐次性})$p(tx)=tp(x)\;(t\ge 0)$;
+			\item (\textit{次可加性})$p(x+y)\le p(x)+p(y)$;
+		\end{enumerate}
+		则称$p$是$X$上的\textbf{次线性泛函}.
+	\end{definition}
+	\begin{theorem}[实Hahn-Banach定理]
+		设$X$是实线性空间,$p$是$X$上的次线性泛函,$X_0$是$X$的子空间.
+		
+		若$X_0$上有实线性泛函$f_0$满足$f_0(x)\le p(x)\;(x\in X_0)$,则$f_0$可以延拓到$X$上的实线性泛函$f$,满足:
+		\begin{enumerate}
+			\item $f(x)\le p(x)\;(x\in X)$;
+			\item $f(x)=f_0(x)\;(x\in X_0)$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		1.首先证明若$y_0\in X$且$y_0\notin X_0$,那么可以将$f_0$延拓到$X_1=\{x+\alpha y_0\mid x\in X_0,\alpha\in\mathbb{R}\}$上的泛函$f_1$,且满足上述条件.
+			
+		注意到对任意$y,z\in X_0$,有不等式
+		$$f_0(y)-f_0(z)=f_0(y-z)\le p(y-z)\le p(y-y_0)+p(y_0-z),$$
+		即有$f_0(y)-p(y-y_0)\le f_0(z)+p(y_0-z)$.
+		
+		取$\beta$满足
+		\begin{equation}
+			\sup_{y\in X_0}{f_0(y)-p(y-y_0)}\le\beta\le\inf_{z\in X_0}{f_0(z)+p(y_0-z)} \tag{*} \label{equa-real-hahn-banach}
+		\end{equation}
+		再令$f_1(x+\alpha y_0)=f_0(x)+\alpha\beta$,则易知此时$f_1$为$X_1$上的实线性泛函,且满足条件2.
+		
+		又注意到条件$f_1(x+\alpha y_0)\le p(x+\alpha y_0)$等价于
+		\begin{align*}
+			& f_0\left(\frac{x}{|\alpha|}\right)+\beta\le p\left(\frac{x}{|\alpha|}+y_0\right) & (\alpha>0) \\
+			& f_0\left(\frac{x}{|\alpha|}\right)-\beta\le p\left(\frac{x}{|\alpha|}-y_0\right) & (\alpha<0)
+		\end{align*}
+		在(\ref{equa-real-hahn-banach})式中取$y=\frac{x}{|\alpha|},z=-\frac{x}{|\alpha|}$即得.
+		
+		2.再来证明一般的$X$上成立.考虑这样的一族子空间:
+		$$\left\{(X',f')\middle|
+			\begin{array}{l}
+				X'\mbox{是子空间},f'\mbox{为}X'\mbox{上泛函}, \\
+				X_0\subset X'\subset X,\mbox{且}f'\mbox{是满足条件1,2的}f_0\mbox{延拓}
+			\end{array}
+		\right\}$$
+		
+		在其上定义偏序关系:如果$X'\subset X''$且$f''$是$f'$在$X''$上的延拓,则令$(X',f')\preceq(X'',f'')$.
+		
+		容易证明,任意一族全序子集$\{(X_\alpha',f_\alpha')\}_\alpha$均有极大元$\left(\bigcup_\alpha{X_\alpha'},f\right)$,其中$f(x)=f_\alpha(x)\;(x\in X_\alpha')$.
+		
+		由Zorn引理,存在极大元$(\tilde{X},\tilde{f})$,且假如此时$\tilde{X}\ne X$,则与1矛盾,故$\tilde{X}=X$,此时$f$即为所求.
+	\end{proof}
+	
+	\begin{definition}
+		设$X$是线性空间,泛函$p:X\to\mathbb{R}$如果满足:
+		\begin{enumerate}
+			\item (\textit{非负性})$p(x)\ge 0$;
+			\item (\textit{齐次性})$p(\alpha x)=|\alpha|p(x)\;(\alpha\in\mathbb{K})$;
+			\item (\textit{三角不等式/次可加性})$p(x+y)\le p(x)+p(y)$
+		\end{enumerate}
+		则称$p$是$X$上的\textbf{半模}(\textbf{半范数}).
+	\end{definition}
+	\begin{theorem}[复Hahn-Banach定理]
+		设$X$是复线性空间,$p$是$X$上的半模,$X_0$是$X$的子空间.
+		
+		若$X_0$上有复线性泛函$f_0$满足$|f_0(x)|\le p(x)\;(x\in X_0)$,
+		则$f_0$可以延拓到$X$上的复线性泛函$f$,满足:
+		\begin{enumerate}
+			\item $|f(x)|\le p(x)\;(x\in X)$;
+			\item $f(x)=f_0(x)\;(x\in X_0)$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		令$g_0(x)=\mathrm{Re}f_0(x)$,则$g_0$是$X_0$上的实线性泛函,且$g_0(x)\le p(x)\;(x\in X_0)$.
+		由实Hahn-Banach定理,存在$X$上实线性泛函$g$,满足$g(x)\le p(x)\;(x\in X)$且$g(x)=g_0(x)\;(x\in X_0)$.
+		
+		令$f(x)=g(x)-ig(ix)\;(x\in X)$,则易知$f$是$X$上复线性泛函,且此时:
+		\begin{enumerate}
+			\item $|f(x)|=e^{-i\theta}f(x)=f(e^{-i\theta}x)=g(e^{-i\theta}x)\le p(e^{-i\theta}x)=p(x)$\\($x\in X$,其中$\theta=\mathrm{arg}f(x)$);
+			\item $f(x)=g_0(x)-ig_0(ix)=\mathrm{Re}f_0(x)+i\mathrm{Im}f_0(x)=f_0(x)$\;($x\in X_0$).
+		\end{enumerate}
+	\end{proof}
+	
+	\begin{theorem}[保范延拓]
+		设$X$是赋范空间,$X_0$是子空间,$f_0\in X_0^*$.那么存在$f\in X^*$,满足:
+		\begin{enumerate}
+			\item $\|f\|=\|f_0\|$;
+			\item $f(x)=f_0(x)\;(x\in X_0)$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		令$p(x)=\|f_0\|\cdot\|x\|$,易知$p$是$X$上半模,且$\|f_0(x)\|\le p(x)$.由Hahn-Banach定理,存在$X$上线性泛函$f$满足$\|f(x)\|\le p(x)=\|f_0\|\cdot\|x\|$,且$f(x)=f_0(x)\;(x\in X_0)$.
+		
+		由前者得到$f\in X^*$且$\|f\|\le\|f_0\|$,由后者又能得到$\|f\|\ge\|f_0\|$,故得证.
+	\end{proof}
+	\begin{corollary}
+		设$X$是赋范空间.对任意$x_1,x_2\in X$且$x_1\ne x_2$,总存在$f\in X^*$,使得$f(x_1)\ne f(x_2)$.
+	\end{corollary}
+	\begin{corollary}\label{corollary-hahn-banach}
+		设$X$是赋范空间,$x_0\in X$且$x_0\ne 0$,则存在$f\in X^*$满足$f(x_0)=\|x_0\|$并且$\|f\|=1$.
+	\end{corollary}
+	
+	\begin{theorem}
+		设$X$是赋范空间,$M$是子空间,$x_0\in X$,并且$d=d(x_0,M)>0$.那么,存在$f\in X^*$,满足:
+		\begin{enumerate}
+			\item $f(x)=0\;(x\in M)$;
+			\item $f(x_0)=d$;
+			\item $\|f\|=1$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proofsketch}
+		令$X_0=\{x+\alpha x_0\mid x\in M,\alpha\in\mathbb{K}\}$,在其上定义线性泛函$f_0(x+\alpha x_0)=\alpha d$,将其保范延拓成$f$即得.
+	\end{proofsketch}
+	
+	\subsection{凸集分离定理}
+	
+	\begin{definition}
+		设$X$是线性空间,$M\subset X$.如果$M=M_0+x_0$,其中$x_0\in X$,且$M_0$是$X$的极大线性子空间(即不存在子空间$M'$使得$M_0\subsetneq M'\subsetneq X$),则称$M$是$X$中的\textbf{超平面}.
+	\end{definition}
+	\begin{corollary}
+		$M$是超平面当且仅当存在非零线性泛函$f$及$r\in\mathbb{K}$使得$M=\{x\mid f(x)=r\}$.并且,此时M是闭的当且仅当$f$是连续的.
+	\end{corollary}
+	\begin{definition}
+		设$X$是线性空间,$E,F\subset X$.若线性泛函$f$满足$f(x)\le r\;(x\in E)$,$f(x)\ge r\;(x\in F)$(或者反过来),则称超平面$L=\{x\mid f(x)=r\}$\textbf{分离}集合$E,F$.
+		
+		若用$<\;>$代替$\le\;\ge$,则称$L$\textbf{严格分离}$E,F$.
+		若$F$是单点集$\{x_0\}$,则也称$L$分离$E,x_0$.
+	\end{definition}
+	
+	\begin{theorem}[凸集分离定理]
+		设$X$是实赋范空间,$E\subset X$是有内点的真凸子集,$x_0\notin E$,那么一定存在(闭的)超平面$L$分离$E,x_0$.
+	\end{theorem}
+	\begin{proof}
+		不妨设$0$是$E$的内点.考虑$E$的Minkowski泛函$p$,它是非零连续次线性泛函,且满足$p(x)\le 1\;(x\in E)$,$p(x_0)\ge 1$.
+		在$X_0=\{\lambda x_0\mid\lambda\in\mathbb{R}\}$上定义$f_0(\lambda x_0)=\lambda p(x_0)$,那么$f_0(\lambda x_0)\le p(\lambda x_0)$成立.
+		
+		由Hahn-Banach定理,存在泛函$f$使得$f(x_0)=f_0(x_0)\ge 1$,并且$f(x)\le p(x)\le 1\;(x\in E)$,这就表明$L=\{x\mid f(x)=1\}$分离$E,x_0$.此时$f$还是连续的.
+	\end{proof}
+	\begin{corollary}
+		设$E_1,E_2$为两个不相交的非空凸集,$E_1$有内点,那么一定存在(闭的)超平面$L$分离$E_1,E_2$.
+	\end{corollary}
+	\begin{theorem}[Ascoli定理]
+		设$X$是实赋范空间,$E\subset X$是其闭凸子集,$x_0\notin E$,则存在闭超平面$L$严格分离$x_0,E$.
+	\end{theorem}
+	
+	\subsection{赋范空间的对偶理论}
+	
+	\begin{definition}
+		设$X$是赋范空间,$X^*$按算子范数$\|f\|=\sup_{\|x\|=1}{|f(x)|}$构成Banach空间,称为$X$的\textbf{对偶空间}.
+	\end{definition}
+	\begin{example}
+		若$1\le p<+\infty$,则$L^p$空间的对偶空间是$L^q$(其中$\frac{1}{p}+\frac{1}{q}=1$).
+		
+		连续函数空间$C[a,b]$的对偶空间是有界变差函数空间$BV[a,b]$.
+	\end{example}
+	\begin{definition}
+		设$X$是赋范空间,我们可以建立映射$T:X\to X^{**},(Tx)(f)=f(x)\;(x\in X,f\in X^*)$,称为$X$上的\textbf{自然映射}.
+	\end{definition}
+	\begin{corollary}
+		自然映射连续、线性,并且是等距变换.因此,$X$等距嵌入$X^{**}$.
+	\end{corollary}
+	\begin{definition}
+		若自然映射$T$是满射,即$X$与$X^{**}$等距同构,则称$X$是\textbf{自反空间}.
+	\end{definition}
+	\begin{definition}
+		设$X,Y$是赋范空间,$T\in L(X,Y)$,那么可以定义算子$T^*:Y^*\to X^*,(T^*f)(x)=f(Tx)\;(f\in Y^*,x\in X^*)$,称为$T$的\textbf{共轭算子}.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item $T^*\in L(Y^*,X^*)$,并且$\|T\|=\|T^*\|$.
+			
+			进一步地,$^*$是$L(X,Y)$到$L(Y^*,X^*)$的等距同构.
+			
+			\item 若$T\in L(X,Y)$,则$T^{**}\in L(X^{**},Y^{**})$是$T$在$X^{**}$上的延拓,并且$\|T\|=\|T^{**}\|$.
+		\end{enumerate}
+	\end{corollary}
+	
+	下面讨论赋范空间上的弱拓扑和弱*拓扑.
+	
+	\begin{definition}
+		设$X$是赋范空间,$x_n,x\in X$.若对任意$f\in X^*$,都有$f(x_n)\to f(x)\;(n\to\infty)$,则称$x_n$\textbf{弱收敛}于$x$,记作$x_n\rightharpoonup x$.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 弱极限如果存在那么必唯一.
+			\item 若$x_n\to x$,那么$x_n\rightharpoonup x$.
+		\end{enumerate}
+	\end{corollary}
+	\begin{theorem}[Mazur定理]
+		设$X$是赋范空间,$x_n\rightharpoonup x_0$,那么对任意$\varepsilon>0$,存在$\lambda_i\ge 0$满足$\sum_{i=1}^n{\lambda_i}=1$,并且
+		$$\left\|x_0-\sum_{i=1}^n{\lambda_i x_i}\right\|\le\varepsilon.$$
+	\end{theorem}
+	\begin{proofsketch}
+		令$M=\overline{\mathrm{co}(\{x_n\})}$,则$M$是$X$中闭凸集.若$x_0\notin M$,由Ascoli定理存在$f\in X^*$和$\alpha\in\mathbb{R}$使得$f(x)<\alpha<f(x_0)\;(x\in M)$,与$x_n\rightharpoonup x$矛盾.
+	\end{proofsketch}
+	\begin{definition}
+		设$X$是赋范空间,$f_n,f\in X^*$,如果对任意$x\in X$,都有$f_n(x)\to f(x)\;(n\to\infty)$,则称$f_n$\;\textbf{*-弱收敛}于$f$,记作$f_n\rightharpoonup^*f$.
+	\end{definition}
+	\begin{corollary}
+		弱收敛蕴含*-弱收敛,且自反空间中二者等价.
+	\end{corollary}
+	\begin{theorem}\label{theorem-weak-convergence}
+		\begin{enumerate}
+			\item 设$X$是赋范空间,$x_n,x\in X$,$M$是$X^*$的稠密子集.
+			
+			则$x_n\rightharpoonup x$当且仅当$\|x_n\|$有界,且$f(x_n)\to f(x)\;(f\in M)$.
+			
+			\item 设$X$是Banach空间,$f_n,f\in X^*$,$M$是$X$的稠密子集.
+			
+			则$f_n\rightharpoonup^* f$当且仅当$\|f_n\|$有界,且$f_n(x)\to f(x)\;(x\in M)$.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proofsketch}
+		应用Banach-Steinhaus定理即得.
+	\end{proofsketch}
+	
+	下面我们讨论弱列紧性和*-弱列紧性,并得到自反空间上弱列紧性的重要定理.
+	\begin{definition}
+		若集合$A$的任意点列都有弱收敛子列,则称$A$是\textbf{弱列紧}的.若$A$的任意点列都有*-弱收敛子列,则称$A$是\textbf{*-弱列紧}的.
+	\end{definition}
+	\begin{theorem}
+		设$X$是可分赋范空间,则$X^*$上任意有界列$\{f_n\}$都有*-弱收敛子列.
+	\end{theorem}
+	\begin{proofsketch}
+		设$\{x_n\}$是$X$的可数稠密子集,由$f_n$有界知$\{f_n(x_m)\}$对固定的$m$有界.
+		
+		利用对角线法,可以抽出子列$\{f_{n_k}\}$使得对每个固定的$m$,$\{f_{n_k}(x_m)\}$收敛.又由稠密性即知对任意的$x\in X$,$\{f_{n_k}(x)\}$收敛,设它收敛于$f(x)$.
+		
+		易知$f$线性,且$\|f\|\le\sup_n{\|f_n\|}$,所以$f\in X^*$且$f_{n_k}\rightharpoonup^* f$.
+	\end{proofsketch}
+	\begin{theorem}\label{theorem-sperable-space}
+		设$X$是赋范空间.若$X^*$可分,则$X$可分.
+	\end{theorem}
+	\begin{proof}
+		\begin{enumerate}
+			\item 记$S^*=\{f\in X^*\mid\|f\|=1\}$,由$X^*$可分知存在$\{f_n\}$在$X^*$中稠密,从而对任意$f\in S^*$,$f_n$中有子列收敛于$f$.
+			令$g_n=\frac{f_n}{\|f_n\|}\in S^*$,则对任意$f\in S^*$,有
+			$$\|f-g_{n_k}\|\le\|f-f_{n_k}\|+\left|1-\|f_{n_k}\|\right|\to 0$$
+			即知$\{g_n\}$是$S^*$的稠密子集.
+			
+			\item 对每个$g_n$,取$x_n\in X$使得$\|x_n\|=1$且$g_n(x_n)\ge\frac{1}{2}$.再令$X_0=\overline{\mathrm{span}\{x_n\}}$,$X_0$显然可分.
+			
+			\item 假设$X_0\ne X$.那么存在$x_0\in X_0$,不妨设$\|x_0\|=1$.由Hahn-Banach定理可知,存在$f_0\in X^*$,使得$\|f_0\|=1$且$f_0(x)=0\;(x\in X_0)$.此时就有$\|g_n-f_0\|\ge|g_n(x_n)-f_0(x_n)|\ge\frac{1}{2}$,矛盾.
+		\end{enumerate}
+	\end{proof}
+	\begin{theorem}[Pettis定理]
+		自反空间的闭子空间也自反.
+	\end{theorem}
+	\begin{proof}
+		设$X$是自反空间,$X_0$是闭子空间.
+		
+		设$x_0\in X_0^{**}$,由$X_0^{**}\subset X^{**}=X$得$x_0\in X$.
+		假设$x_0\notin X_0$,由Hahn-Banach定理可知,存在$f\in X^*$使得$f(x)=0\;(x\in X_0)$且$f(x_0)=1$,但由$x_0\in X_0^{**}$和$X^*\subset X_0^*$可知$x_0(f)=f(x_0)=0$,矛盾.于是$X_0$是自反空间.
+	\end{proof}
+	\begin{theorem}[Eberlein-Smulian定理]
+		自反空间的单位球是弱列紧集,单位闭球是弱自列紧集.
+	\end{theorem}
+	\begin{proof}
+		1.首先证明自反空间$X$中的任意有界点列$\{x_n\}$都有弱收敛子列.
+		
+		令$X_0=\overline{\mathrm{span}\{x_n\}}$,则$X_0$是可分自反空间,即$X_0^{**}$可分,再由\thmref{theorem-sperable-space}即知$X_0^*$可分.
+		
+		此时$x_n\in X_0^{**}$,$\|x_n\|$有界,并且对于$X_0^*$的可数稠密子集$M$,利用对角线法可以取出$x_{n_k}$使得$x_{n_k}(f)\to x(f)\;(x\in X_0^{**},f\in M)$成立,从而由\thmref{theorem-weak-convergence}可知$x_{n_k}(f)\to x(f)\;(f\in X_0^*)$成立.
+		
+		再由$X_0$自反,$f(x_{n_k})\to f(x)$对任意$f\in X_0^*$成立.对任意$\tilde{f}\in X^*$,考虑$\tilde{f}$在$X_0^*$上的限制$f$,那么就有$f(x_{n_k})\to f(x_0)$,即$x_{n_k}\rightharpoonup x$.
+		
+		2.由1立知$X$的单位球是弱列紧集.对单位闭球$S$上的任意点列$x_n$,$\|x_n\|\le 1$且$x_n\rightharpoonup x_0\in X$.
+		
+		由\cororef{corollary-hahn-banach},存在$f\in X^*$使得$f(x_0)=\|x_0\|$,$\|f\|=1$,从而
+		$$\|x_0\|=f(x_0)=\lim_{k\to\infty}{f(x_{n_k})}\le\|f\|\cdot\sup_{k}{\|x_{n_k}\|}\le\|f\|=1,$$
+		即$x_0\in S$,故$S$是弱自列紧的.
+	\end{proof}
+	
+	\newpage
+	
+	\section{紧算子的谱理论}
+	
+	\subsection{算子的谱}
+	
+	\begin{definition}
+		设$X$是复赋范空间,$D\subset X$,$A:D\to X$为闭线性算子,定义$\rho(A)=\{\lambda\in\mathbb{C}\mid(\lambda I-A)^{-1}\in L(X)\}$为$A$的\textbf{预解集},其中的元素$\lambda\in\rho(A)$称为$A$的\textbf{正则值},在此之外的全体$\lambda\in\mathbb{C}-\rho(A)$称为$A$的\textbf{谱}.
+	\end{definition}
+	\begin{definition}[谱的分类]
+		设$A$为闭线性算子,$\lambda\in\mathbb{C}$.有四种情况:
+		\begin{enumerate}
+			\item $(\lambda I-A)^{-1}$不存在,即存在$x_0\ne 0$使得$Ax_0=\lambda x_0$.此时称$\lambda$是$A$的\textbf{点谱}(特征值),记作$\lambda\in\sigma_p(A)$.
+			\item $(\lambda I-A)^{-1}$存在,且其定义域$R=\mathrm{dom}(\lambda I-A)^{-1}=\mathrm{im}(\lambda I-A)$满足$R\ne X$,$\overline{R}=X$,则称$\lambda$是$A$的\textbf{连续谱},记作$\lambda\in\sigma_c(A)$.
+			\item $(\lambda I-A)^{-1}$存在,且$\overline{R}\ne X$,则称$\lambda$是$A$的\textbf{剩余谱},记作$\lambda\in\sigma_r(A)$.
+			\item $(\lambda I-A)^{-1}$存在,且$R=X$,此时$\lambda$就是$A$的正则值.
+		\end{enumerate}
+	\end{definition}
+	
+	\begin{definition}
+		设$A$的预解集为$\rho(A)$,定义算子$R_A:\rho(A)\to L(X),R_A(\lambda)=(\lambda I-A)^{-1}$为$A$的\textbf{预解式}.
+	\end{definition}
+	\begin{corollary}[第一预解公式]
+		设$\lambda,\mu\in\rho(A)$,则:
+		$$R_A(\lambda)-R_A(\mu)=(\mu-\lambda)R_A(\lambda)R_A(\mu).$$
+	\end{corollary}
+	\begin{lemma}\label{lemma-pre-solution}
+		设$T\in L(X)$,$\|T\|<1$,那么$(I-T)^{-1}\in L(X)$,并且$\|(I-T)^{-1}\|\le\frac{1}{1-\|T\|}$.
+	\end{lemma}
+	\begin{theorem}
+		设$A$的预解集为$\rho(A)$,预解式为$R_A(\lambda)$,那么:
+		\begin{enumerate}
+			\item $\rho(A)$是开集;
+			\item $R_A(\lambda)$是$\rho(A)$上的解析函数.
+		\end{enumerate}
+	\end{theorem}
+	\begin{proof}
+		1.设$\lambda_0\in\rho(A)$.对$\lambda\in\mathbb{C}$,注意到
+		$$\lambda I-A=(\lambda_0I-A)[I+(\lambda-\lambda_0)(\lambda_0I-A)^{-1}],$$
+		
+		当$|\lambda-\lambda_0|<\|(\lambda_0I-A)^{-1}\|$时,由\lemmaref{lemma-pre-solution}知$[I+(\lambda-\lambda_0)(\lambda_0I-A)^{-1}]^{-1}\in L(X)$,所以$(\lambda I-A)^{-1}\in L(X)$.
+		
+		2.首先证明$R_A(\lambda)$在$\rho(A)$上连续.对任意$\lambda_0\in\rho(A)$,只要$|\lambda-\lambda_0|<\frac{1}{2\|(\lambda_0I-A)^{-1}\|}$,就有
+		$$\|R_A(\lambda)\|\le\|R_A(\lambda_0)\|\cdot\|[I+(\lambda-\lambda_0)(\lambda_0I-A)^{-1}]^{-1}\|\le 2\|R_A(\lambda_0)\|$$
+		
+		再由第一预解公式得到
+		\begin{align*}
+			\|R_A(\lambda)-R_A(\lambda_0)\| & \le|\lambda-\lambda_0|\cdot\|R_A(\lambda)\|\cdot\|R_A(\lambda_0)\| \\
+			& \le 2\|R_A(\lambda_0)\|^2\cdot|\lambda-\lambda_0|\to 0\;(\lambda\to\lambda_0)
+		\end{align*}
+		所以$R_A(\lambda)$连续.
+		
+		再证明$R_A(\lambda)$解析.由第一预解公式,有
+		$$\lim_{\lambda\to\lambda_0}\frac{R_A(\lambda)-R_A(\lambda_0)}{\lambda-\lambda_0}=-\lim_{\lambda\to\lambda_0}{R_A(\lambda)R_A(\lambda_0)}=-R_A(\lambda_0)^2$$
+		得证.
+	\end{proof}
+	\begin{theorem}[谱点存在性定理]
+		若$A\in L(X)$,那么$\sigma(A)\ne\emptyset$.
+	\end{theorem}
+	\begin{proof}
+		反证,若$\rho(A)=\mathbb{C}$,那么$R_A(\lambda)$在$\mathbb{C}$上解析;又因为$|\lambda|>\|A\|$时$\|R_A(\lambda)\|\le\frac{1}{|\lambda|-\|A\|}$,所以$R_A(\lambda)$在$\mathbb{C}$上有界.
+		
+		对任意$f\in L(X)^*$,$f(R_A(\lambda))$是$\mathbb{C}$上的有界解析函数,由Liouville定理$f(R_A(\lambda))$是常值函数.再由Hahn-Banach定理,$R_A(\lambda)$为常算子,这与第一预解公式矛盾.
+	\end{proof}
+	
+	\begin{definition}
+		设$A\in L(X)$,定义$r_\sigma(A)=\sup_{\lambda\in\sigma(A)}{|\lambda|}$为$A$的\textbf{谱半径}.
+	\end{definition}
+	\begin{theorem}[Gelfand定理]
+		设$X$是Banach空间,$A\in L(X)$,那么
+		$$r_\sigma(A)=\lim_{n\to\infty}{\|A^n\|^\frac{1}{n}}.$$
+	\end{theorem}
+	\begin{proof}
+		记$a=r_\sigma(A)$.
+		
+		一方面,对任意$f\in L(X)^*$,$f(R_A(\lambda))$是$|\lambda|>a$上的解析函数.此时又有
+		$$f(R_A(\lambda))=\sum_{n=0}^\infty\frac{f(A^n)}{\lambda^{n+1}},$$
+		所以对任意$\varepsilon>0$,
+		$$\sum_{n=0}^\infty\frac{|f(A^n)|}{(a+\varepsilon)^{n+1}}<+\infty.$$
+		
+		从而$\left|f(\frac{A^n}{(a+\varepsilon)^{n+1}})\right|$有界,
+		由共鸣定理,存在$M>0$使得$\frac{\|A^n\|}{(a+\varepsilon)^{n+1}}\le M$,从而知$\varlimsup_{n\to\infty}{\|A^n\|^\frac{1}{n}}\le a+\varepsilon$.
+		再由$\varepsilon$任意性即知$\varlimsup_{n\to\infty}{\|A^n\|^\frac{1}{n}}\le a$.
+		
+		另一方面,对任意$\lambda\in\mathbb{C}$,根据$\lambda^nI-A^n=(\lambda I-A)(A^{n-1}+\lambda A^{n-2}+\cdots+\lambda^{n-1})$即知$\lambda^n\in\rho(A)$蕴含$\lambda\in\rho(A)$,也即$\lambda\in\sigma(A)$蕴含$\lambda^n\in\sigma(A)$.
+		此时就有$|\lambda^n|\le\|A^n\|$,从而$|\lambda|\le\varliminf_{n\to\infty}{\|A^n\|^\frac{1}{n}}$.
+		根据$\lambda$的任意性即知$a\le\varliminf_{n\to\infty}{\|A^n\|^\frac{1}{n}}$.
+		
+		综上所述,$a=\lim_{n\to\infty}{\|A^n\|^\frac{1}{n}}$.
+	\end{proof}
+	
+	\subsection{紧算子}
+	
+	\begin{definition}
+		设$X,Y$是Banach空间,$T:X\to Y$是线性算子.记$B_X$为$X$中的单位球,若$\overline{T(B_X)}$是$Y$中的紧集,则称$T$是\textbf{紧算子},记作$T\in\mathcal{K}(X,Y)$.
+	\end{definition}
+	\begin{corollary}
+		以下条件等价:
+		\begin{enumerate}
+			\item $T\in\mathcal{K}(X,Y)$;
+			\item 对任意$X$中有界子集$B$,$\overline{T(B)}$是紧集;
+			\item 对任意$X$中有界点列$\{x_n\}$,$\{Tx_n\}$有收敛子列.
+		\end{enumerate}
+	\end{corollary}
+	\begin{corollary}
+		\begin{enumerate}
+			\item $\mathcal{K}(X,Y)\subset L(X,Y)$;
+			\item 若$S,T\in\mathcal{K}(X,Y)$,那么$\alpha S+\beta T\in\mathcal{K}(X,Y)$;
+			\item $\mathcal{K}(X,Y)$是$L(X,Y)$中闭集,即$\mathcal{K}(X,Y)$对极限封闭;
+			\item 若$A\in\mathcal{K}(X,Y)$,$X_0$是闭线性子空间,则$A|_{X_0}\in\mathcal{K}(X,Y)$.
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{definition}
+		设$A\in L(X,Y)$,若$x_n\rightharpoonup x$蕴含$Ax_n\to x$,则称$A$\textbf{全连续}.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 若$A\in\mathcal{K}(X,Y)$,那么$A$全连续;
+			\item 若$X$自反,且$A$全连续,那么$A\in\mathcal{K}(X,Y)$.
+		\end{enumerate}
+	\end{corollary}
+	\begin{proof}
+		\begin{enumerate}
+			\item 设$x_n\rightharpoonup x$.若$Ax_n\not\to Ax$,那么存在$\varepsilon>0$以及$n_i$,使得$\|Ax_{n_i}-Ax\|>\varepsilon_0$.
+			由$x_n\rightharpoonup x$知$\{x_n\}$有界,又因为$A\in\mathcal{K}(X,Y)$知$\{Ax_{n_i}\}$的子列$\{Ax_{n_i'}\}$收敛于$z$.
+			因为$Ax_n\rightharpoonup Ax$,所以$z=Ax$,矛盾.
+			
+			\item 设点列$\{x_n\}$有界,由$X$自反以及Eberlein-Smulian定理知存在弱收敛子列$x_{n_i}\rightharpoonup x$,再由$A$全连续知$Ax_{n_i}\to Ax$,即$\{Ax_n\}$有收敛子列.
+		\end{enumerate}
+	\end{proof}
+	
+	\begin{theorem}[紧算子的对偶]
+		$T\in\mathcal{K}(X,Y)$当且仅当$T^*\in\mathcal{K}(Y^*,X^*)$.
+	\end{theorem}
+	\begin{definition}
+		设$T\in L(X,Y)$.若$\mathrm{dim}T(X)<+\infty$,则称$T$为\textbf{有穷秩算子},记作$T\in\mathcal{F}_r(X,Y)$.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item $\mathcal{F}_r(X,Y)\subset\mathcal{K}(X,Y)$;
+			\item 定义秩1算子$y\otimes f\in L(X,Y),(y\otimes f)(x)=f(x)\cdot y\;(f\in X^*,y\in Y)$,那么$T\in\mathcal{F}_r(X,Y)$当且仅当
+			$$T=\sum_{i=1}^n{y_i\otimes f_i}$$
+		\end{enumerate}
+	\end{corollary}
+	\begin{definition}
+		设$X$是Banach空间,$\{e_n\}\subset X$.若对任意$x\in X$,存在一列唯一的$\{C_n\}$使得
+		$$x=\lim_{n\to\infty}{\sum_{k=1}^n{C_kx_k}},$$
+		那么称$\{e_n\}$为$X$的一组\textbf{Schauder基}.
+	\end{definition}
+	\begin{theorem}
+		若可分Banach空间$X$有一组Schauder基,那么$\overline{\mathcal{F}_r(X,Y)}=\mathcal{K}(X,Y)$.
+	\end{theorem}
+	
+	\subsection{紧算子的谱性质}
+	
+	为了考察紧算子的谱性质,首先考察形如``$I-$紧算子''这样的算子所具有的性质.
+	
+	\begin{definition}
+		设$T\in L(X)$,若其值域$\mathrm{im}T$是闭集,则称$T$为\textbf{闭值域算子}.
+	\end{definition}
+	\begin{theorem}
+		若$A\in\mathcal{K}(X)$,则$T=I-A$是闭值域算子.
+	\end{theorem}
+	\begin{proofsketch}
+		$\mathrm{ker}T$是$X$的闭子空间,考察$\tilde{T}:X/\mathrm{ker}T\to X,\tilde{T}([x])=Tx$,它是可逆算子,且值域与$T$相同.
+		
+		要证$\mathrm{T}$闭,只需证$\tilde{T}^{-1}$连续.假如不连续,可以取到一列$x_n$使得$\|x_n\|<2\|[x_n]\|_0=2$,而且$\tilde{T}([x_n])=Tx_n\to 0$.
+		由$A\in\mathcal{K}(X)$,存在子列$Ax_{n_k}\to y\in X$,进而$x_{n_k}\to y$,这就推出$Ty=0$,矛盾.
+	\end{proofsketch}
+	
+	\begin{definition}
+		设$M$是$X$的闭线性子空间,称$\mathrm{codim}M=\mathrm{dim}(X/M)$为$M$的\textbf{余维数}.
+	\end{definition}
+	\begin{definition}
+		设$M\subset X$,$N\subset X^*$,定义
+		\begin{align*}
+			& ^\perp M=\{f\in X^*\mid \mbox{对任意}x\in X,f(x)=0\} \\
+			& N^\perp=\{x\in X\mid \mbox{对任意}f\in N,f(x)=0\}
+		\end{align*}
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 若$T\in L(X)$,则$\overline{\mathrm{im}T}=\mathrm{ker}T^{*\perp}$,$\overline{\mathrm{im}T^*}=^\perp\mathrm{ker}T$;
+			\item 若$M$是$X$的闭线性子空间,则$(X/M)^*\backsimeq^\perp\mathrm{ker}T$;
+			\item 若$A\in\mathcal{K}(X)$,$T=I-A$,则$\mathrm{codim}(\mathrm{im}T)\le\mathrm{dim}(\mathrm{ker}T)$.
+		\end{enumerate}
+	\end{corollary}
+	\begin{theorem}
+		若$A\in\mathcal{K}(X)$,$T=I-A$,则$\mathrm{codim}(\mathrm{im}T)=\mathrm{dim}(\mathrm{ker}T)=\mathrm{dim}(\mathrm{ker}T^*)<+\infty$.
+	\end{theorem}
+	
+	最后刻画紧算子的谱和结构.
+	\begin{theorem}[紧算子的谱]
+		设$A\in\mathcal{K}(X)$,则:
+		\begin{enumerate}
+			\item 若$\mathrm{dim}X=+\infty$,那么$0\in\sigma(A)$;
+			\item 若$\lambda\ne 0$,那么$\lambda\in\sigma(A)\Leftrightarrow\lambda\in\sigma_p(A)$;
+			\item 若$\sigma_p(A)-\{0\}$是无限集,那么它以0为聚点.
+		\end{enumerate}
+	\end{theorem}
+	\begin{theorem}[紧算子的结构]
+		设$A\in\mathcal{K}(X)$,$T=I-A$,那么存在$p\ge 0$使得$X=\mathrm{ker}T^p\oplus\mathrm{im}T^p$,且算子$T_1=T|_{\mathrm{im}T^p}$满足$T_1^{-1}\in L(\mathrm{im}T^p)$.
+	\end{theorem}
+	
+	\subsection{Hilbert空间上的自伴紧算子}
+	
+	\begin{definition}
+		设$X$是内积空间,$A\in L(X)$.若对任意$x,y\in X$,$(Ax,y)=(x,Ay)$,则称$A$为\textbf{自伴(对称)算子}.
+	\end{definition}
+	\begin{corollary}
+		\begin{enumerate}
+			\item 若$A$是自伴算子,则$\sigma(A)\subset\mathbb{R}$,并且对任意$x\in H$,$\lambda\in\mathbb{C}$($\mathrm{Im}\lambda\ne 0$),有
+			$$\|(\lambda I-A)^{-1}x\|\le\frac{1}{|\mathrm{Im}\lambda|}\|x\|;$$
+			
+			\item 若$A$是自伴算子,则
+			$$\sup_{\|x\|=1}{|(Ax,x)|}=\|A\|.$$
+		\end{enumerate}
+	\end{corollary}
+	
+	\begin{theorem}[极值性质]
+		设$A$是自伴紧算子,则存在$x_0\in X$,$\|x_0\|=1$使得
+		$$|(Ax_0,x_0)|=\sup_{\|x\|=1}{|(Ax,x)|};$$
+		并且此时$Ax_0=\lambda x_0\;(|\lambda|=|(Ax_0,x_0)|)$.
+	\end{theorem}
+	\begin{theorem}[Hilbert-Schmidt定理]
+		设$A$是自伴紧算子,则$A$的特征值至多可数且以0为聚点.此时,$A$的特征值$\{\lambda_n\}$对应一组正交规范基$\{e_n\}$,使得
+		\begin{align*}
+			& x=\sum_i{(x,e_i)e_i}, \\
+			& Ax=\sum_i{\lambda_i(x,e_i)e_i}.
+		\end{align*}
+	\end{theorem}
+	\begin{theorem}[极小极大刻画]
+		设$A$为自伴紧算子,其特征值按大小排列为$\lambda_1^+\ge\lambda_2^+\ge\cdots\ge 0$,$\lambda_1^-\le\lambda_2^-\le\cdots<0$,那么
+		\begin{align*}
+			& \lambda_n^+=\inf_{E_{n-1}}\sup_{x\in E_{n-1}^\perp,x\ne 0}\frac{(Ax,x)}{\|x\|^2}, \\
+			& \lambda_n^-=\sup_{E_{n-1}}\inf_{x\in E_{n-1}^\perp,x\ne 0}\frac{(Ax,x)}{\|x\|^2}.
+		\end{align*}
+		其中$E_{n-1}$取遍$X$的$n-1$维线性子空间.
+	\end{theorem}
+	
+\end{document}
